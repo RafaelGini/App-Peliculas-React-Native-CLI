@@ -11,7 +11,7 @@ class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
       SplashScreen.show(this)  // Muestra el splash screen
-      super.onCreate(savedInstanceState)
+      super.onCreate(null)     // React Navigation 
   }
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
