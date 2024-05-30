@@ -10,11 +10,6 @@ GoogleSignin.configure({
 });
 
 const LoginScreen = ({ navigation }) => {
-  const handleLogin = () => {
-
-    navigation.replace('HomeTabs');
-  };
-
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -50,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
       <Image source={require('../../../assets/images/MovieFinder_logo.png')} style={styles.logo} />
       <Text style={styles.title}>MovieFinder</Text>
       <Text style={styles.subtitle}>Ingrese con su cuenta de Google</Text>
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Login" onPress={signIn} />
     </View>
   );
 };
