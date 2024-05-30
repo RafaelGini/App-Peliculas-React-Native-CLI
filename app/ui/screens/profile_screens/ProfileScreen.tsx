@@ -54,8 +54,6 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.body}>
-        <View style={styles.bodyContent}>
-
         <View style={styles.form}>
           <Text style={styles.label}>Nickname</Text>
           <TextInput
@@ -77,7 +75,7 @@ const ProfileScreen = () => {
             editable={false}
           />
         </View>
-
+        <View style={styles.bodyContent}>
           <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerChanges]} onPress={handleSaveChanges}>
             <Text style={styles.textButton}>Guardar cambios</Text>
           </TouchableOpacity>
@@ -102,12 +100,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    //flex: 1,
-    marginTop: 100,
-    height: 100,
+    flex: 1,
+    //marginTop: 50,
+    //height: 100,
   },
   form: {
-    //width: '90%',
+    flex: 2,
   },
   label: {
     marginTop: 10,
@@ -148,11 +146,13 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   body: {
-    marginTop: 55,
+    flex: 4,
+    marginTop: 75,
   },
   bodyContent: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
+    marginTop: 25,
     padding: 10,
   },
   textButton: {
