@@ -10,9 +10,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 //Screens y componentes
-import LoginScreen from './app/ui/screens/loginScreens/LoginScreen';
+import LoginScreen from './app/ui/screens/LoginScreens/LoginScreen';
 import HomeTabs from './app/Navigation/HomeTabs';
-import MovieDetailsScreen from './app/ui/screens/movieDetailsScreen/MovieDetailScreen';
+import MovieDetailsScreen from './app/ui/screens/MovieDetailsScreen/MovieDetailScreen';
 
 const Stack = createNativeStackNavigator();
 

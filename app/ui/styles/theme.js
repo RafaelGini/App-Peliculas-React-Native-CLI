@@ -6,6 +6,7 @@ export default {
       text: '#FFFFFF',
       text_light: '#92929D',
       grey: '#92929D',
+      red: '#FB4141',
       
     },
     fonts: {
