@@ -9,12 +9,19 @@ import SearchScreen from '../ui/screens/serch_screens/SearchScreen';
 import FavoritesScreen from '../ui/screens/favorites_screens/FavoritesScreen';
 import ProfileScreen from '../ui/screens/profile_screens/ProfileScreen';
 
+//Styling
+import theme from '../ui/styles/theme';
+
 const Tab = createBottomTabNavigator();
 
 function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerStyle: {
+          backgroundColor: theme.colors.background, // Color del header
+        },
+        headerTintColor: theme.colors.text, // Color del texto del header
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -34,16 +41,17 @@ function HomeTabs() {
           }
           return <Ionicons name={iconName} size={size} color={color} />
         },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.grey,
         tabBarStyle: {
+          backgroundColor: theme.colors.background, // Color de la tab bar
           height: 80,  
           paddingBottom: 10,  
           paddingTop: 10,  
         },
         tabBarLabelStyle: {
           fontSize: 15, 
-        }
+        },
       })}
     >
 
