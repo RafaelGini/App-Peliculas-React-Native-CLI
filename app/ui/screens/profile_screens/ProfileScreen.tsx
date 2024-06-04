@@ -1,18 +1,17 @@
-import React, { useState } from 'react'  
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-//Styling
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../styles/theme';
 
 const ProfileScreen = () => {
   const profile = {
-    name: 'Miguel Martinez',
-    nickname: 'MiguelMartinez01',
+    googleId: 'string',
+    name: 'Miguel',
+    surname: 'Martinez',
     email: 'miguelmartinez@example.com',
-    bio: 'Software engineer and cat lover',
-    photo: 'https://i0.wp.com/lamiradafotografia.es/wp-content/uploads/2014/07/foto-perfil-psicologo.jpg?resize=180%2C180&ssl=1',
+    nickname: 'MiguelMartinez01',
+    profileImage: 'https://i0.wp.com/lamiradafotografia.es/wp-content/uploads/2014/07/foto-perfil-psicologo.jpg?resize=180%2C180&ssl=1',
   }
+
   const [nickname, setNickname] = useState(profile.nickname);
 
   const handleChangePic = () => {
@@ -35,165 +34,122 @@ const ProfileScreen = () => {
     console.log('Cuenta eliminada');
   };
 
-  return (
+  const handleActiveSave = (currentNick, initialNick) => {
+    if(!currentNick) {return true};
+    return (currentNick == initialNick);
+  };
 
+  return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
-          source={{ uri: profile.photo }}
+          source={{uri: profile.profileImage}}
         />
-        <TouchableOpacity style={styles.buttonEdit} onPress={handleChangePic}>
-          <Ionicons name={"pencil"} size={18} color={theme.colors.primary} />
+        <TouchableOpacity style={styles.changeAvatarButton} onPress={handleChangePic}>
+          <Text style={styles.changeAvatarButtonText}>Cambiar foto de perfil</Text>
         </TouchableOpacity>
-        <Text style={styles.name}>
-          {profile.name}
-          {"\n"}
-          {profile.email}
-        </Text>
+      </View>
+      <View style={styles.form}>
+        <Text style={styles.label}>Nickname</Text>
+        <TextInput
+          style={styles.input}
+
+          placeholder="*Ingrese un nombre de usuario*"
+          placeholderTextColor={theme.colors.red}
+          value={nickname}
+          onChangeText={setNickname}
+        />
+        <Text style={styles.label}>Nombre y apellido</Text>
+        <TextInput
+          style={styles.input}
+          value={profile.name+' '+profile.surname}
+          editable={false}
+        />
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          value={profile.email}
+          editable={false}
+        />
+        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerChanges]} onPress={handleSaveChanges} disabled={handleActiveSave(nickname, profile.nickname)}>
+          <Text style={styles.buttonText}>Guardar cambios</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerLogout]} onPress={handleLogout}>
+          <Text style={styles.buttonText}>Cerrar sesión</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerDelete]} onPress={handleDeleteAccount}>
+          <Text style={styles.buttonText}>Eliminar cuenta</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.body}>
-        <View style={styles.form}>
-          <Text style={styles.label}>Nickname</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter nickname"
-            value={nickname}
-            onChangeText={setNickname}
-          />          
-          <Text style={styles.label}>Nombre y apellido</Text>
-          <TextInput 
-            style={styles.input}
-            value={profile.name}
-            editable={false}
-          />
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            value={profile.email}
-            editable={false}
-          />
-        </View>
-        <View style={styles.bodyContent}>
-          <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerChanges]} onPress={handleSaveChanges}>
-            <Text style={styles.textButton}>Guardar cambios</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerClose]} onPress={handleLogout}>
-            <Text style={styles.textButton}>Cerrar sesión</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerDelete]} onPress={handleDeleteAccount}>
-            <Text style={styles.textButton}>Eliminar cuenta</Text>
-          </TouchableOpacity>
-
-        </View>
-      </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.background,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  header: {
-    flex: 1,
-    //marginTop: 50,
-    //height: 100,
+    backgroundColor: theme.colors.background,
   },
   form: {
-    flex: 2,
+    justifyContent: 'center',
+    width: '80%',
   },
   label: {
-    marginTop: 10,
-    fontSize: 10,
+    marginTop: 7,
     color: theme.colors.text,
   },
   input: {
-    height: 40,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: 280,
-    borderRadius: 25,
-    borderColor: theme.colors.text_light,
-    color: theme.colors.text_light,
+    borderColor: theme.colors.grey,
     borderWidth: 1,
+    borderRadius: 25,
+    height: 40,
     padding: 10,
-    fontSize: 14,
-  },
-  avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 63,
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    marginBottom: 10,
-    alignSelf: 'center',
-    position: 'absolute',
-    marginTop: 20,
-  },
-  name: {
-    alignSelf: 'center',
-    textAlign: 'center',
-    fontFamily: theme.fonts.regular,
     fontSize: 16,
-    color: theme.colors.text,
-    fontWeight: '600',
-    marginTop: 30,
-  },
-  body: {
-    flex: 4,
-    marginTop: 75,
-  },
-  bodyContent: {
-    flex: 2,
-    alignItems: 'center',
-    marginTop: 25,
-    padding: 10,
-  },
-  textButton: {
-    fontSize: 12,
-    color: theme.colors.background,
-  },
-  buttonEdit: {
-    marginTop: 50,
-    height: 35,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    width: 35,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    backgroundColor: theme.colors.background,
+    color: theme.colors.text_light,
   },
   buttonContainerDefault: {
     marginTop: 10,
-    height: 25,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 110,
+    alignSelf: 'center',
     borderRadius: 30,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
   },
   buttonContainerChanges: {
     backgroundColor: theme.colors.primary,
     marginTop: 20,
-    width: 170,
   },
-  buttonContainerClose: {
+  buttonContainerLogout: {
     backgroundColor: theme.colors.grey,
-    width: 130,
   },
   buttonContainerDelete: {
     backgroundColor: theme.colors.red,
   },
-})
-
+  buttonText: {
+    color: theme.colors.background,
+    fontSize: 12,
+  },
+  avatarContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+  },
+  changeAvatarButton: {
+    marginTop: 5,
+  },
+  changeAvatarButtonText: {
+    color: theme.colors.primary,
+    fontSize: 14,
+  },
+});
 
 export default ProfileScreen;
