@@ -177,22 +177,17 @@ const SearchScreen = () => {
     </TouchableOpacity>
   );
 
-  const filteredData = propertyData.filter((item) => {
-    // API Call para traer datos filtrados
-    return propertyData;
-  });
-
   const [iconDate, setIconDate] = useState("");
   const [iconRate, setIconRate] = useState("");
-  const [data, setData] = useState(filteredData);
+  const [data, setData] = useState(propertyData);
 
   const sortByDate = () => {
     setIconRate("");
     data.sort(function (a, b) {
       if(iconDate == "arrow-down"){
-        return b.releaseYear - a.releaseYear; //Descendente
+        return a.releaseYear - b.releaseYear; //Descendente
       } else {
-        return a.releaseYear - b.releaseYear; //Ascendente
+        return b.releaseYear - a.releaseYear; //Ascendente
       }
     });
     setData([...data]);
@@ -203,13 +198,18 @@ const SearchScreen = () => {
     setIconDate("");
     data.sort(function (a, b) {
       if(iconRate == "arrow-down"){
-        return b.score - a.score; //Descendente
+        return a.score - b.score; //Descendente
       } else {
-        return a.score - b.score; //Ascendente
+        return b.score - a.score; //Ascendente
       }
     });
     setData([...data]);
     iconRate == "arrow-down" ? setIconRate("arrow-up") : setIconRate("arrow-down");
+  };
+
+  const filter = () => {
+    //API Call para traer datos, usar searchText ??
+    setData([]);
   };
 
   return (
@@ -225,7 +225,7 @@ const SearchScreen = () => {
             />
         </View>
         <View style={styles.searchInputButton}>
-          <TouchableOpacity style={styles.searchButton}>
+          <TouchableOpacity style={styles.searchButton} onPress={filter}>
             <Ionicons name={"search"} size={styles.movieRate.fontSize} color={theme.colors.primary}/>
           </TouchableOpacity>
         </View>
