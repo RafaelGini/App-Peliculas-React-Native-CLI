@@ -178,11 +178,8 @@ const SearchScreen = () => {
   );
 
   const filteredData = propertyData.filter((item) => {
-    let cast_conc = '';
-    for(let i=0; i<item.cast.length; i++) {
-      cast_conc = cast_conc + item.cast[i];
-    }
-    return ( item.title.toLowerCase().includes(searchText.toLowerCase()) || cast_conc.toLowerCase().includes(searchText.toLowerCase()) );
+    // API Call para traer datos filtrados
+    return propertyData;
   });
 
   const [iconDate, setIconDate] = useState("");
@@ -190,6 +187,7 @@ const SearchScreen = () => {
   const [data, setData] = useState(filteredData);
 
   const sortByDate = () => {
+    setIconRate("");
     data.sort(function (a, b) {
       if(iconDate == "arrow-down"){
         return b.releaseYear - a.releaseYear; //Descendente
@@ -202,6 +200,7 @@ const SearchScreen = () => {
   };
 
   const sortByRate = () => {
+    setIconDate("");
     data.sort(function (a, b) {
       if(iconRate == "arrow-down"){
         return b.score - a.score; //Descendente
@@ -216,13 +215,20 @@ const SearchScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.searchInputContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Busca por título o actor..."
-          placeholderTextColor={theme.colors.text_light}
-          onChangeText={handleSearch}
-          value={searchText}
-        />
+        <View style={styles.searchInputText}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Busca por título o actor..."
+            placeholderTextColor={theme.colors.text_light}
+            onChangeText={handleSearch}
+            value={searchText}
+            />
+        </View>
+        <View style={styles.searchInputButton}>
+          <TouchableOpacity style={styles.searchButton}>
+            <Ionicons name={"search"} size={styles.movieRate.fontSize} color={theme.colors.primary}/>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.sortContainer}>
@@ -294,6 +300,20 @@ const styles = StyleSheet.create({
 
   searchInputContainer:{
     paddingHorizontal:20,
+    flexDirection: 'row',
+  },
+  searchInputText: {
+    flex: 5,
+  },
+  searchInputButton: {
+    flex: 1,
+  },
+  searchButton: {
+    borderRadius: 30,
+    borderColor: theme.colors.grey,
+    backgroundColor: theme.colors.background_soft,
+    padding: 10,
+    alignSelf: 'center',
   },
   sortContainer:{
     paddingHorizontal:20,

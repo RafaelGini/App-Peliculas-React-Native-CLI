@@ -53,8 +53,7 @@ const ProfileScreen = () => {
       <View style={styles.form}>
         <Text style={styles.label}>Nickname</Text>
         <TextInput
-          style={styles.input}
-
+          style={[styles.input, styles.inputEdit]}
           placeholder="*Ingrese un nombre de usuario*"
           placeholderTextColor={theme.colors.red}
           value={nickname}
@@ -72,7 +71,8 @@ const ProfileScreen = () => {
           value={profile.email}
           editable={false}
         />
-        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerChanges]} onPress={handleSaveChanges} disabled={handleActiveSave(nickname, profile.nickname)}>
+        <TouchableOpacity style={handleActiveSave(nickname, profile.nickname) ? [styles.buttonContainerDefault, styles.buttonContainerInactive] : [styles.buttonContainerDefault, styles.buttonContainerChanges]} 
+                          onPress={handleSaveChanges} disabled={handleActiveSave(nickname, profile.nickname)}>
           <Text style={styles.buttonText}>Guardar cambios</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerLogout]} onPress={handleLogout}>
@@ -111,6 +111,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: theme.colors.text_light,
   },
+  inputEdit: {
+    color: theme.colors.text,
+  },
   buttonContainerDefault: {
     marginTop: 10,
     alignSelf: 'center',
@@ -120,6 +123,10 @@ const styles = StyleSheet.create({
   },
   buttonContainerChanges: {
     backgroundColor: theme.colors.primary,
+    marginTop: 20,
+  },
+  buttonContainerInactive: {
+    backgroundColor: theme.colors.primary_inactive,
     marginTop: 20,
   },
   buttonContainerLogout: {
