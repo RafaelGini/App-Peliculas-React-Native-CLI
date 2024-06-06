@@ -34,7 +34,7 @@ const ProfileScreen = () => {
     console.log('Cuenta eliminada');
   };
 
-  const handleActiveSave = (currentNick, initialNick) => {
+  const handleActiveSave = (currentNick: string, initialNick: string) => {
     if(!currentNick) {return true};
     return (currentNick == initialNick);
   };
