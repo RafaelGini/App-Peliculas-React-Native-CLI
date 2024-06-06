@@ -26,9 +26,7 @@ const SearchScreen = () => {
   //useEffect(() => {
   //  setData(propertyData);
   // }, []);
-
-
-
+  
   useEffect(() => {
     fetchData(searchText); // Llama a fetchData con el searchText actual
   }, [searchText]);
