@@ -9,7 +9,6 @@ const searchStyles = StyleSheet.create({
   },
   cardPicture: {
     flex: 3,
-    padding: 10,
     alignSelf: 'center',
     backgroundColor: theme.colors.background,
   },
@@ -23,7 +22,7 @@ const searchStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   movieTitle: {
-    fontSize: 26,
+    fontSize: 22,
     color: theme.colors.text,
     fontFamily: theme.fonts.bold,
   },

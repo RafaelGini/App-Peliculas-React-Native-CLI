@@ -7,11 +7,14 @@ import { MovieItem } from './Interfaces';
 import styles from './searchStyles'
 import { propertyData } from './testData';
 import { searchMovies } from './searchServices';
+import CheckConnection from './checkConnection';
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
-  const [iconDate, setIconDate] = useState("");
-  const [iconRate, setIconRate] = useState("");
+  const [iconDate, setIconDate] = useState("arrow-up");
+  const [iconDateColor, setIconDateColor] = useState(theme.colors.background_soft);
+  const [iconRate, setIconRate] = useState("arrow-up");
+  const [iconRateColor, setIconRateColor] = useState(theme.colors.background_soft);
   const [data, setData] = useState<MovieItem[]>([]);
 
   const fetchData = async (query: string) => {
@@ -38,7 +41,9 @@ const SearchScreen = () => {
   const renderItem = ({ item }: { item: MovieItem }) => <Item item={item} />;
 
   const sortByDate = () => {
-    setIconRate("");
+    //Resetear el boton de sort contrario
+    setIconRate("arrow-up");
+    setIconRateColor(theme.colors.background_soft);
     data.sort(function (a, b) {
       const dateA = new Date(a.release_date);
       const dateB = new Date(b.release_date);
@@ -51,11 +56,14 @@ const SearchScreen = () => {
     });
     setData([...data]);
     iconDate === "arrow-down" ? setIconDate("arrow-up") : setIconDate("arrow-down");
+    setIconDateColor(theme.colors.primary);
   };
   
 
   const sortByRate = () => {
-    setIconDate("");
+    //Resetear el boton de sort contrario
+    setIconDate("arrow-up");
+    setIconDateColor(theme.colors.background_soft);
     data.sort(function (a, b) {
       if (iconRate == "arrow-down") {
         return a.vote_average - b.vote_average; //Descendente
@@ -65,6 +73,7 @@ const SearchScreen = () => {
     });
     setData([...data]);
     iconRate == "arrow-down" ? setIconRate("arrow-up") : setIconRate("arrow-down");
+    setIconRateColor(theme.colors.primary);
   };
 
   const filter = () => {
@@ -72,6 +81,11 @@ const SearchScreen = () => {
     setData([]);
   };
 
+  let network = CheckConnection();
+  if (network === false) {
+    return <ErrorCard />;
+  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.searchInputContainer}>
@@ -94,12 +108,12 @@ const SearchScreen = () => {
       <View style={styles.sortContainer}>
         <View style={styles.sortLineBox}>
           <TouchableOpacity style={styles.sortButton} onPress={sortByDate}>
-            <Text style={styles.sortText}>Fecha <Ionicons name={iconDate} size={styles.movieRate.fontSize} color={theme.colors.primary} /></Text>
+            <Text style={styles.sortText}>Fecha <Ionicons name={iconDate} size={styles.movieRate.fontSize} color={iconDateColor} /></Text>
           </TouchableOpacity>
         </View>
         <View style={styles.sortLineBox}>
           <TouchableOpacity style={styles.sortButton} onPress={sortByRate}>
-            <Text style={styles.sortText}>Calificación <Ionicons name={iconRate} size={styles.movieRate.fontSize} color={theme.colors.primary} /> </Text>
+            <Text style={styles.sortText}>Calificación <Ionicons name={iconRate} size={styles.movieRate.fontSize} color={iconRateColor} /> </Text>
           </TouchableOpacity>
         </View>
       </View>
