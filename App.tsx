@@ -12,7 +12,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //Screens y componentes
 import LoginScreen from './app/ui/screens/loginScreens/LoginScreen';
 import HomeTabs from './app/Navigation/HomeTabs';
-import MovieDetailsScreen from './app/ui/screens/movieDetailsScreen/MovieDetailScreen';
+import MovieDetailScreen from './app/ui/screens/movieDetailsScreen/movieDetailsScreenUI';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +29,7 @@ const App = () => {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="MovieDetails" component={MovieDetailsScreen}/>
+        <Stack.Screen name="MovieDetails" component={MovieDetailScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

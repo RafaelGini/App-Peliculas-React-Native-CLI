@@ -1,20 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { getMovieDetails } from './movieDetailsServices';
-import { RouteProp } from '@react-navigation/native';
 import MovieDetailScreenUI from './movieDetailsScreenUI';
 
-type RootStackParamList = {
-  MovieDetails: { movieId: number };
-};
-
-type MovieDetailsScreenRouteProp = RouteProp<RootStackParamList, 'MovieDetails'>;
-
-type Props = {
-  route: MovieDetailsScreenRouteProp;
-};
-
-const MovieDetailsScreen: React.FC<Props> = ({ route }) => {
+const MovieDetailsScreen = ({ route }) => {
   
   const { movieId } = route.params;
   const [movieDetails, setMovieDetails] = useState(null);
