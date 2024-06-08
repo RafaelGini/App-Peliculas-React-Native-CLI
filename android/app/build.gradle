@@ -76,7 +76,7 @@ android {
 
     namespace "com.awesome"
     defaultConfig {
-        applicationId "com.awesome"
+        applicationId "com.awesome_v2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
