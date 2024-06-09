@@ -6,7 +6,7 @@ import MovieItem from './MovieItem';
 import theme from '../../styles/theme';
 
 interface MovieListProps {
-  movies: Movie[];
+  movies: Movie[],
 }
 
 const MovieList: React.FC<MovieListProps> = ({ movies }) => {

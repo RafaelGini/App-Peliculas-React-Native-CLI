@@ -4,6 +4,7 @@ import { FlatList, View, TextInput, StyleSheet, Text } from 'react-native';
 import Movie from '../../interfaces/Movie';
 import theme from '../styles/theme';
 import FilterButton from './FilterButton';
+import MovieList from './movieComponents/MovieList';
 
 interface SearchScreenUIProps {
   movies: Movie[];
@@ -56,16 +57,7 @@ const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
           onPress={toggleSorter}
         />
       </View>
-
-      <FlatList
-        data={movies}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.movieItem}>
-            <Text style={styles.movieTitle}>{item.title}</Text>
-          </View>
-        )}
-      />
+      <MovieList movies={movies} />
     </View>
   );
 };

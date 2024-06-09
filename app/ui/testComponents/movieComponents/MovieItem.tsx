@@ -12,11 +12,10 @@ interface MovieItemProps {
 const MovieItem: React.FC<MovieItemProps> = ({ movie }) => {
   return (
     <View style={styles.container}>
-      <Image source={{ uri: movie.poster }} style={styles.poster} />
+      <Image source={{ uri: movie.poster_path }} style={styles.poster} />
       <View style={styles.info}>
         <Text style={styles.title}>{movie.title}</Text>
         <Text style={styles.releaseDate}>{movie.release_date}</Text>
-        <Text style={styles.overview}>{movie.overview}</Text>
         <Text style={styles.vote}>{`Rating: ${movie.vote_average}`}</Text>
         <Text style={styles.genres}>{`Genres: ${movie.genres.join(', ')}`}</Text>
       </View>

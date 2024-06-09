@@ -24,7 +24,7 @@ const SearchScreen = () => {
         const fetchedMovies = await getMovies(searchInput);
         setMovies(fetchedMovies);
       }
-    }, 2000);
+    }, 500);
     setTimer(newTimer);
     return () => {
       if (newTimer) {
@@ -59,7 +59,7 @@ const SearchScreen = () => {
     console.log(`Se cambio a ${selectedFilter}`)
     setFilter(selectedFilter);
     if (selectedFilter === 'default') {
-      setSorter('desc'); // Reset sorter to default if filter is default
+      setSorter('desc'); 
     }
   };
 

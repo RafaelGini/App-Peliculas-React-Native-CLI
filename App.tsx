@@ -14,6 +14,9 @@ import LoginScreen from './app/ui/screens/loginScreens/LoginScreen';
 import HomeTabs from './app/Navigation/HomeTabs';
 import MovieDetailsScreen from './app/ui/screens/movieDetailsScreen/MovieDetailScreen';
 
+//Context
+import { AuthProvider } from './app/context/AuthContext';
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -25,15 +28,16 @@ const App = () => {
   }, []);
 
   return (
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
 
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="MovieDetails" component={MovieDetailsScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-    
   );
 };
 

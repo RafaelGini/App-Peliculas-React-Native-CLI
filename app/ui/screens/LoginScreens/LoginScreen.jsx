@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
 import theme from '../../styles/theme';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin';
+import { AuthContext } from '../../../context/AuthContext';
+import { getUserProfile } from '../../../services/getUserProfile';
+
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
@@ -10,31 +13,35 @@ GoogleSignin.configure({
 
 const LoginScreen = ({ navigation }) => {
 
-  const handleLogin = () => {
-    navigation.replace('HomeTabs');
-  };
+  const { login, userInfo} = useContext(AuthContext);
+
+  const mapToGoogleUserInfo = (userInfo) => {
+    return {
+        name: userInfo.user.givenName,
+        surname: userInfo.user.familyName,
+        email: userInfo.user.email,
+        nickname: "", 
+        profileImage: userInfo.user.photo,
+        googleId: userInfo.user.id
+    };
+};
 
   const signIn = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-      // Aquí puedes hacer la llamada a tu API backend
 
+      await GoogleSignin.hasPlayServices();
+      const googleUserInfo = await GoogleSignin.signIn();
+      const mappedUserInfo = mapToGoogleUserInfo(googleUserInfo);
+      await login(mappedUserInfo);
+      console.log(userInfo)
       navigation.replace('HomeTabs');
+      getUserProfile(userInfo.id, userInfo.token);
+      
+
     } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log(error); // Usuario canceló la sign-in
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log(error);// Operación en curso
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log(error); // Play services no disponibles
-      } else {
-        console.log(error); // Otro error
-      }
+        console.log(error); 
     }
   };
-
 
   return (
     <View style={styles.container}>
