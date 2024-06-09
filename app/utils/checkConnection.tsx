@@ -7,13 +7,13 @@ NetInfo.fetch().then((state) => {
   currentNetwork = state.isConnected;
 });
 
-const CheckConnection = () => {
+const checkConnection = () => {
   const [netInfo, setNetInfo] = useState(currentNetwork);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
+      //console.log("Connection type", state.type);
+      //console.log("Is connected?", state.isConnected);
       setNetInfo(state.isConnected);
     });
     return () => unsubscribe();
@@ -22,4 +22,4 @@ const CheckConnection = () => {
   return netInfo;
 };
 
-export default CheckConnection;
+export default checkConnection;

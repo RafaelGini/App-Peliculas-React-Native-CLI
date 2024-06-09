@@ -7,7 +7,10 @@ import { MovieItem } from './Interfaces';
 import styles from './searchStyles'
 import { propertyData } from './testData';
 import { searchMovies } from './searchServices';
-import CheckConnection from './checkConnection';
+import checkConnection from '../../../utils/checkConnection';
+import noInternetScreen from '../../../utils/noInternetScreen';
+import initialDataScreen from '../../../utils/initialDataScreen';
+import noDataScreen from '../../../utils/noDataScreen';
 
 const SearchScreen = () => {
   const [searchText, setSearchText] = useState('');
@@ -81,9 +84,12 @@ const SearchScreen = () => {
     setData([]);
   };
 
-  let network = CheckConnection();
-  if (network === false) {
-    return <ErrorCard />;
+  if (checkConnection() === false) {
+    return (
+      <View style={styles.container}>
+        {noInternetScreen()}
+      </View>
+    )
   }
   
   return (
@@ -121,6 +127,7 @@ const SearchScreen = () => {
       <FlatList
         contentContainerStyle={styles.listContainer}
         //data={filteredData}
+        ListEmptyComponent={!searchText ? initialDataScreen : noDataScreen}
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}

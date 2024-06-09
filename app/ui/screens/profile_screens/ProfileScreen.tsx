@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../styles/theme';
+import checkConnection from '../../../utils/checkConnection';
+import noInternetScreen from '../../../utils/noInternetScreen';
 
 const ProfileScreen = () => {
   const profile = {
@@ -38,6 +40,14 @@ const ProfileScreen = () => {
     if(!currentNick) {return true};
     return (currentNick == initialNick);
   };
+
+  if (checkConnection() === false) {
+    return (
+      <View style={styles.container}>
+        {noInternetScreen()}
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
