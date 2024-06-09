@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { getMovies } from '../../services/searchMovies';
+//import { searchMovies } from '../screens/serch_screens/searchServices';
 import Movie from '../../interfaces/Movie';
 import SearchScreenUI from './UI_searchScreen';
 import theme from '../styles/theme';
@@ -55,6 +56,7 @@ const SearchScreen = () => {
   }, [movies, filter, sorter]);
 
   const handleFilter = (selectedFilter: 'date' | 'rating' | 'default') => {
+    console.log(`Se cambio a ${selectedFilter}`)
     setFilter(selectedFilter);
     if (selectedFilter === 'default') {
       setSorter('desc'); // Reset sorter to default if filter is default
