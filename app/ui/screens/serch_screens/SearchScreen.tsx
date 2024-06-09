@@ -22,13 +22,9 @@ const SearchScreen = () => {
       console.error('Error fetching data:', error);
     }
   };
-
-  //useEffect(() => {
-  //  setData(propertyData);
-  // }, []);
   
   useEffect(() => {
-    fetchData(searchText); // Llama a fetchData con el searchText actual
+    fetchData(searchText); 
   }, [searchText]);
 
   const handleSearch = (text: string) => {

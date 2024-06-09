@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/theme';
-import { MovieItem } from './Interfaces'
 import styles from './searchStyles'
 import { useNavigation } from '@react-navigation/native';
 
 const Item = ({ item }) => {
-  //: { item: MovieItem }
   const navigation = useNavigation();
 
   const handlePress = () => {
