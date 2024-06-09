@@ -114,12 +114,14 @@ const SearchScreen = () => {
       <View style={styles.sortContainer}>
         <View style={styles.sortLineBox}>
           <TouchableOpacity style={styles.sortButton} onPress={sortByDate}>
-            <Text style={styles.sortText}>Fecha <Ionicons name={iconDate} size={styles.movieRate.fontSize} color={iconDateColor} /></Text>
+            <Text style={styles.sortText}>Fecha</Text>
+            <Ionicons name={iconDate} style={styles.icon} size={styles.movieRate.fontSize} color={iconDateColor}/>
           </TouchableOpacity>
         </View>
         <View style={styles.sortLineBox}>
           <TouchableOpacity style={styles.sortButton} onPress={sortByRate}>
-            <Text style={styles.sortText}>Calificación <Ionicons name={iconRate} size={styles.movieRate.fontSize} color={iconRateColor} /> </Text>
+            <Text style={styles.sortText}>Calificación</Text>
+            <Ionicons name={iconRate} style={styles.icon} size={styles.movieRate.fontSize} color={iconRateColor}/>
           </TouchableOpacity>
         </View>
       </View>

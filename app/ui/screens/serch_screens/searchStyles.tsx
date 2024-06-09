@@ -72,11 +72,15 @@ const searchStyles = StyleSheet.create({
     backgroundColor: theme.colors.background_soft,
     paddingHorizontal: 30,
     paddingVertical: 2,
-    alignSelf: 'center',
+    marginLeft: 3,
+    marginRight: 3,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   sortText: {
     fontSize: 18,
     color: theme.colors.primary,
+    alignSelf: 'center',
   },
   searchInput: {
     height: 40,

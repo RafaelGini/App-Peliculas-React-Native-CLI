@@ -3,6 +3,7 @@ import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'reac
 import theme from '../../styles/theme';
 import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const ProfileScreen = () => {
   const profile = {
@@ -15,10 +16,28 @@ const ProfileScreen = () => {
   }
 
   const [nickname, setNickname] = useState(profile.nickname);
+  const [image, setImage] = useState(profile.profileImage);
 
   const handleChangePic = () => {
     // Lógica para guardar los cambios en el servidor
-    console.log('Cambiar foto');
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+  
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('Image picker error: ', response.error);
+      } else {
+        let imageUri = response.uri || response.assets?.[0]?.uri;
+        setImage(imageUri);
+        //Post nueva imagen perfil
+      }
+    });
   };
 
   const handleSaveChanges = () => {
@@ -54,7 +73,7 @@ const ProfileScreen = () => {
       <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
-          source={{uri: profile.profileImage}}
+          source={{uri: image}}
         />
         <TouchableOpacity style={styles.changeAvatarButton} onPress={handleChangePic}>
           <Text style={styles.changeAvatarButtonText}>Cambiar foto de perfil</Text>
