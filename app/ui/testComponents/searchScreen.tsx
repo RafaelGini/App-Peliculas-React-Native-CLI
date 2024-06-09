@@ -33,7 +33,6 @@ const SearchScreen = () => {
   }, [searchInput]);
 
   useEffect(() => {
-    // Apply sorting based on filter and sorter
     let sortedMovies = [...movies];
     if (filter === 'date') {
       sortedMovies.sort((a, b) => {
@@ -84,7 +83,7 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 5,
     backgroundColor: theme.colors.background
   },
 });
