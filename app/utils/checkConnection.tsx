@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import NetInfo from '@react-native-community/netinfo';
 
-let currentNetwork;
+let currentNetwork: boolean | null;
 
 NetInfo.fetch().then((state) => {
   currentNetwork = state.isConnected;
