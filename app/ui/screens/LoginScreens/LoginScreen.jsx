@@ -15,13 +15,24 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+      // Aquí puedes hacer la llamada a tu API backend
 
-    await GoogleSignin.hasPlayServices();
-    console.log("iniciando sesion...");
-    const userInfo = await GoogleSignin.signIn();
-    console.log(userInfo);
-
-    // Aquí puedes hacer la llamada a tu API backend
+      navigation.replace('HomeTabs');
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log(error); // Usuario canceló la sign-in
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log(error);// Operación en curso
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log(error); // Play services no disponibles
+      } else {
+        console.log(error); // Otro error
+      }
+    }
   };
 
 

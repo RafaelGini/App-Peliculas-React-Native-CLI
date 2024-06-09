@@ -25,6 +25,7 @@ const App = () => {
   }, []);
 
   return (
+
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
@@ -32,6 +33,7 @@ const App = () => {
         <Stack.Screen name="MovieDetails" component={MovieDetailsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
+    
   );
 };
 
