@@ -3,6 +3,7 @@ import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './searchStyles';
 import theme from '../../styles/theme';
+import { useTranslation } from 'react-i18next';
 
 interface SearchScreenProps {
   searchText: string;
@@ -11,13 +12,15 @@ interface SearchScreenProps {
 }
 
 const SearchScreenUI: React.FC<SearchScreenProps> = ({ searchText, handleSearch, filter }) => {
+  const {t} = useTranslation();
+
   return (
     <View style={styles.container}>
       <View style={styles.searchInputContainer}>
         <View style={styles.searchInputText}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Busca por título o actor..."
+            placeholder={t('PLACEHOLDER_SEARCH')}//"Busca por título o actor..."
             onChangeText={handleSearch}
             value={searchText}
           />

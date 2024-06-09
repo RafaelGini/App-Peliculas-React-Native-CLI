@@ -11,8 +11,11 @@ import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
 import initialDataScreen from '../../../utils/initialDataScreen';
 import noDataScreen from '../../../utils/noDataScreen';
+import { useTranslation } from 'react-i18next';
 
 const SearchScreen = () => {
+  const {t} = useTranslation();
+
   const [searchText, setSearchText] = useState('');
   const [iconDate, setIconDate] = useState("arrow-up");
   const [iconDateColor, setIconDateColor] = useState(theme.colors.background_soft);
@@ -98,7 +101,7 @@ const SearchScreen = () => {
         <View style={styles.searchInputText}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Busca por título o actor..."
+            placeholder={t('PLACEHOLDER_SEARCH')}
             placeholderTextColor={theme.colors.text_light}
             onChangeText={handleSearch}
             value={searchText}
@@ -114,13 +117,13 @@ const SearchScreen = () => {
       <View style={styles.sortContainer}>
         <View style={styles.sortLineBox}>
           <TouchableOpacity style={styles.sortButton} onPress={sortByDate}>
-            <Text style={styles.sortText}>Fecha</Text>
+            <Text style={styles.sortText}>{t('SORT_DATE_T')}</Text>
             <Ionicons name={iconDate} style={styles.icon} size={styles.movieRate.fontSize} color={iconDateColor}/>
           </TouchableOpacity>
         </View>
         <View style={styles.sortLineBox}>
           <TouchableOpacity style={styles.sortButton} onPress={sortByRate}>
-            <Text style={styles.sortText}>Calificación</Text>
+            <Text style={styles.sortText}>{t('SORT_RATE_T')}</Text>
             <Ionicons name={iconRate} style={styles.icon} size={styles.movieRate.fontSize} color={iconRateColor}/>
           </TouchableOpacity>
         </View>

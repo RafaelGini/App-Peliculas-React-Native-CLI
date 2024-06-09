@@ -1,0 +1,20 @@
+{
+    "translation": {
+      "LOGIN_GOOGLE": "Ingrese con su cuenta de Google",
+      "PLACEHOLDER_SEARCH": "Busca por título o actor...",
+      "PLACEHOLDER_NICKNAME": "*Ingrese un nombre de usuario*",
+      "SORT_DATE_T": "Fecha",
+      "SORT_RATE_T": "Calificación",
+      "INITIAL_DATA_SEARCH": "¡Realizá una busqueda para ver resultados!",
+      "NO_DATA_SEARCH": "¡Lo siento, no pudimos encontrar la busqueda!", 
+      "NO_INTERNET": "¡Sin conexion a internet!",
+      "RETRY_CONECTION": "Por favor, revise su conexión a internet y vuelva a intentarlo",
+      "LABEL_NICKNAME": "Nickname",
+      "LABEL_NAME": "Nombre y apellido",
+      "LABEL_EMAIL": "Email",
+      "BUTTON_CHANGE_PIC": "Cambiar foto de perfil",
+      "BUTTON_SAVE_CHANGES": "Guardar cambios",
+      "BUTTON_LOGOUT": "Cerrar sesión",
+      "BUTTON_DELETE_ACCOUNT": "Eliminar cuenta"      
+   }
+  }
