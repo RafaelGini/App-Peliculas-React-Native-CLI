@@ -5,6 +5,8 @@ import Movie from '../../interfaces/Movie';
 import theme from '../styles/theme';
 import FilterButton from './FilterButton';
 import MovieList from './movieComponents/MovieList';
+import checkConnection from '../../utils/checkConnection';
+import noInternetScreen from '../../utils/noInternetScreen';
 
 interface SearchScreenUIProps {
   movies: Movie[];
@@ -57,7 +59,7 @@ const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
           onPress={toggleSorter}
         />
       </View>
-      <MovieList movies={movies} />
+      <MovieList movies={movies} searchInput={searchInput} />
     </View>
   );
 };

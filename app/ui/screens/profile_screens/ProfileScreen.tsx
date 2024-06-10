@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import theme from '../../styles/theme';
+import checkConnection from '../../../utils/checkConnection';
+import noInternetScreen from '../../../utils/noInternetScreen';
 
 const ProfileScreen = () => {
   const profile = {
@@ -38,6 +40,14 @@ const ProfileScreen = () => {
     if(!currentNick) {return true};
     return (currentNick == initialNick);
   };
+
+  if (checkConnection() === false) {
+    return (
+      <View style={styles.container}>
+        {noInternetScreen()}
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -99,13 +109,14 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   label: {
-    marginTop: 7,
+    marginTop: 14,
     color: theme.colors.text,
   },
   input: {
     borderColor: theme.colors.grey,
     borderWidth: 1,
     borderRadius: 25,
+    marginTop: 3,
     height: 40,
     padding: 10,
     fontSize: 16,
@@ -117,6 +128,8 @@ const styles = StyleSheet.create({
   buttonContainerDefault: {
     marginTop: 10,
     alignSelf: 'center',
+    alignItems: 'center',
+    width: 170,
     borderRadius: 30,
     paddingVertical: 8,
     paddingHorizontal: 20,

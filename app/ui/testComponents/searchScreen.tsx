@@ -5,6 +5,8 @@ import { getMovies } from '../../services/searchMovies';
 import Movie from '../../interfaces/Movie';
 import SearchScreenUI from './UI_searchScreen';
 import theme from '../styles/theme';
+import checkConnection from '../../utils/checkConnection';
+import noInternetScreen from '../../utils/noInternetScreen';
 
 const SearchScreen = () => {
   const [searchInput, setSearchInput] = useState<string>('');
@@ -66,6 +68,14 @@ const SearchScreen = () => {
   const toggleSorter = () => {
     setSorter(sorter === 'asc' ? 'desc' : 'asc');
   };
+
+  if (checkConnection() === false) {
+    return (
+      <View style={styles.container}>
+        {noInternetScreen()}
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
