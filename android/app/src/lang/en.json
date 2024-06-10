@@ -1,0 +1,24 @@
+{
+    "translation": {
+      "LOGIN_GOOGLE": "Sign in with your Google account",
+      "PLACEHOLDER_SEARCH": "Search movies...",
+      "PLACEHOLDER_NICKNAME": "*Please complete nickname*",
+      "SORT_DATE_T": "Date",
+      "SORT_RATE_T": "Rating",
+      "SORT_DEFAULT_T": "Default",
+      "SORT_ASCENDING": "Ascending",
+      "SORT_DESCENDING": "Descending",
+      "INITIAL_DATA_SEARCH": "Use search bar to find a movie!",
+      "NO_DATA_SEARCH": "Sorry! We could not find your search...", 
+      "NO_DATA_HELP": "Search by movie name or cast...", 
+      "NO_INTERNET": "Ups! No internet connection",
+      "RETRY_CONNECTION": "Please, review your connections and try again later",
+      "LABEL_NICKNAME": "Nickname",
+      "LABEL_NAME": "Full name",
+      "LABEL_EMAIL": "Email",
+      "BUTTON_CHANGE_PIC": "Change profile picture",
+      "BUTTON_SAVE_CHANGES": "Save changes",
+      "BUTTON_LOGOUT": "Logout",
+      "BUTTON_DELETE_ACCOUNT": "Delete account"      
+   }
+  }

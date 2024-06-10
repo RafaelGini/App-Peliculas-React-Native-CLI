@@ -4,7 +4,7 @@ import theme from '../../styles/theme';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin';
 import { AuthContext } from '../../../context/AuthContext';
 import { getUserProfile } from '../../../services/getUserProfile';
-
+import { useTranslation } from 'react-i18next';
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
@@ -12,6 +12,7 @@ GoogleSignin.configure({
 });
 
 const LoginScreen = ({ navigation }) => {
+  const {t} = useTranslation();
 
   const { login, userInfo} = useContext(AuthContext);
 
@@ -47,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../../../assets/images/MovieFinder_logo.png')} style={styles.logo} />
       <Text style={styles.title}>MovieFinder</Text>
-      <Text style={styles.subtitle}>Ingrese con su cuenta de Google</Text>
+      <Text style={styles.subtitle}>{t('LOGIN_GOOGLE')}</Text>
       <GoogleSigninButton
         style={{ width: 192, height: 48 }}
         size={GoogleSigninButton.Size.Wide}

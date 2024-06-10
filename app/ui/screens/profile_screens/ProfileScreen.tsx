@@ -4,6 +4,7 @@ import theme from '../../styles/theme';
 import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useTranslation } from 'react-i18next';
 
 const ProfileScreen = () => {
   const profile = {
@@ -14,6 +15,8 @@ const ProfileScreen = () => {
     nickname: 'MiguelMartinez01',
     profileImage: 'https://i0.wp.com/lamiradafotografia.es/wp-content/uploads/2014/07/foto-perfil-psicologo.jpg?resize=180%2C180&ssl=1',
   }
+
+  const {t} = useTranslation();
 
   const [nickname, setNickname] = useState(profile.nickname);
   const [image, setImage] = useState(profile.profileImage);
@@ -77,25 +80,25 @@ const ProfileScreen = () => {
           source={{uri: image}}
         />
         <TouchableOpacity style={styles.changeAvatarButton} onPress={handleChangePic}>
-          <Text style={styles.changeAvatarButtonText}>Cambiar foto de perfil</Text>
+          <Text style={styles.changeAvatarButtonText}>{t('BUTTON_CHANGE_PIC')}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.form}>
-        <Text style={styles.label}>Nickname</Text>
+        <Text style={styles.label}>{t('LABEL_NICKNAME')}</Text>
         <TextInput
           style={[styles.input, styles.inputEdit]}
-          placeholder="*Ingrese un nombre de usuario*"
+          placeholder={t('PLACEHOLDER_NICKNAME')}
           placeholderTextColor={theme.colors.red}
           value={nickname}
           onChangeText={setNickname}
         />
-        <Text style={styles.label}>Nombre y apellido</Text>
+        <Text style={styles.label}>{t('LABEL_NAME')}</Text>
         <TextInput
           style={styles.input}
           value={profile.name+' '+profile.surname}
           editable={false}
         />
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>{t('LABEL_EMAIL')}</Text>
         <TextInput
           style={styles.input}
           value={profile.email}
@@ -103,13 +106,13 @@ const ProfileScreen = () => {
         />
         <TouchableOpacity style={handleActiveSave(nickname, profile.nickname) ? [styles.buttonContainerDefault, styles.buttonContainerInactive] : [styles.buttonContainerDefault, styles.buttonContainerChanges]} 
                           onPress={handleSaveChanges} disabled={handleActiveSave(nickname, profile.nickname)}>
-          <Text style={styles.buttonText}>Guardar cambios</Text>
+          <Text style={styles.buttonText}>{t('BUTTON_SAVE_CHANGES')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerLogout]} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Cerrar sesión</Text>
+          <Text style={styles.buttonText}>{t('BUTTON_LOGOUT')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerDelete]} onPress={handleDeleteAccount}>
-          <Text style={styles.buttonText}>Eliminar cuenta</Text>
+          <Text style={styles.buttonText}>{t('BUTTON_DELETE_ACCOUNT')}</Text>
         </TouchableOpacity>
       </View>
 
