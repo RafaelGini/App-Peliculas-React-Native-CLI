@@ -5,6 +5,8 @@ import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
+import useUserInfo from '../../../hooks/useUserInfo';
+import UserInfo from '../../../interfaces/UserInfo';
 
 const ProfileScreen = () => {
   const profile = {
@@ -15,6 +17,9 @@ const ProfileScreen = () => {
     nickname: 'MiguelMartinez01',
     profileImage: 'https://i0.wp.com/lamiradafotografia.es/wp-content/uploads/2014/07/foto-perfil-psicologo.jpg?resize=180%2C180&ssl=1',
   }
+
+  const userInfo: UserInfo | null = useUserInfo()
+
 
   const {t} = useTranslation();
 
@@ -29,7 +34,7 @@ const ProfileScreen = () => {
       maxHeight: 2000,
       maxWidth: 2000,
     };
-  
+      
     launchImageLibrary(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');

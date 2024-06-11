@@ -1,46 +1,47 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
 import theme from '../../styles/theme';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin';
-import { AuthContext } from '../../../context/AuthContext';
-import { getUserProfile } from '../../../services/getUserProfile';
 import { useTranslation } from 'react-i18next';
+import { login } from '../../../services/loginAPIService';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../redux/slices/userSlice';
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
   offlineAccess: true
 });
 
-const LoginScreen = ({ navigation }) => {
-  const {t} = useTranslation();
-
-  const { login, userInfo} = useContext(AuthContext);
-
-  const mapToGoogleUserInfo = (userInfo) => {
-    return {
-        name: userInfo.user.givenName,
-        surname: userInfo.user.familyName,
-        email: userInfo.user.email,
-        nickname: "", 
-        profileImage: userInfo.user.photo,
-        googleId: userInfo.user.id
-    };
+const mapToGoogleUserInfo = (userInfo) => {
+  return {
+    name: userInfo.user.givenName,
+    surname: userInfo.user.familyName,
+    email: userInfo.user.email,
+    nickname: "",
+    profileImage: userInfo.user.photo,
+    googleId: userInfo.user.id
+  };
 };
+
+const LoginScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const signIn = async () => {
     try {
-
+      
       await GoogleSignin.hasPlayServices();
       const googleUserInfo = await GoogleSignin.signIn();
       const mappedUserInfo = mapToGoogleUserInfo(googleUserInfo);
-      await login(mappedUserInfo);
-      console.log(userInfo)
+      const userInfoResponse = await login(mappedUserInfo)
+
+      console.log(userInfoResponse);
+
+      dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');
-      getUserProfile(userInfo.id, userInfo.token);
-      
 
     } catch (error) {
-        console.log(error); 
+      console.log(error);
     }
   };
 

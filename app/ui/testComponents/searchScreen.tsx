@@ -1,12 +1,29 @@
+//React
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+
+//Services
 import { getMovies } from '../../services/searchMovies';
-//import { searchMovies } from '../screens/serch_screens/searchServices';
+import { refreshToken } from '../../services/refreshTokenService';
+
+//Interfaces
 import Movie from '../../interfaces/Movie';
+import UserInfo from '../../interfaces/UserInfo';
+
+//Components - UI
 import SearchScreenUI from './UI_searchScreen';
+
+//Styles
 import theme from '../styles/theme';
+
+//Conection
 import checkConnection from '../../utils/checkConnection';
 import noInternetScreen from '../../utils/noInternetScreen';
+
+//Redux
+import useUserInfo from '../../hooks/useUserInfo';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/slices/userSlice';
 
 const SearchScreen = () => {
   const [searchInput, setSearchInput] = useState<string>('');
@@ -15,6 +32,9 @@ const SearchScreen = () => {
   const [filter, setFilter] = useState<'date' | 'rating' | 'default'>('default');
   const [sorter, setSorter] = useState<'asc' | 'desc'>('desc');
   const [movieList, setMovieList] = useState<Movie[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (timer) {
@@ -22,11 +42,23 @@ const SearchScreen = () => {
     }
     const newTimer = setTimeout(async () => {
       if (searchInput.trim().length > 0) {
-        console.log("Se llamó al endpoint")
-        const fetchedMovies = await getMovies(searchInput);
+
+        console.log(`Sacamos el userInfo del CONTEX DE REDUX 
+          y le pasamos el id: \n ${userInfo?.id}\n`)
+
+        const refreshedUserInfo = await refreshToken(userInfo?.id);
+
+        console.log(`Hacemos refresh token en el componente antes de llamar a las pelis 
+          y devuelve la info refrescada, ademas la guardamos en el context y luego llamamos al back: \n ${refreshedUserInfo}\n`)
+
+        dispatch(setUser(refreshedUserInfo));
+        setUserInfo(refreshedUserInfo)
+
+        const fetchedMovies = await getMovies(searchInput, userInfo);
         setMovies(fetchedMovies);
       }
     }, 500);
+
     setTimer(newTimer);
     return () => {
       if (newTimer) {
@@ -61,7 +93,7 @@ const SearchScreen = () => {
     console.log(`Se cambio a ${selectedFilter}`)
     setFilter(selectedFilter);
     if (selectedFilter === 'default') {
-      setSorter('desc'); 
+      setSorter('desc');
     }
   };
 

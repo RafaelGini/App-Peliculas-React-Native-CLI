@@ -14,8 +14,10 @@ import LoginScreen from './app/ui/screens/loginScreens/LoginScreen';
 import HomeTabs from './app/Navigation/HomeTabs';
 import MovieDetailsScreen from './app/ui/screens/movieDetailsScreen/MovieDetailScreen';
 
-//Context
-import { AuthProvider } from './app/context/AuthContext';
+//Redux
+import { Provider } from 'react-redux';
+import store from './app/redux/store';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +30,7 @@ const App = () => {
   }, []);
 
   return (
-    <AuthProvider>
+    <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
@@ -36,7 +38,7 @@ const App = () => {
           <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    </AuthProvider>
+    </Provider>
 
   );
 };
