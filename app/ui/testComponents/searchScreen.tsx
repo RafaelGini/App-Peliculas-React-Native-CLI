@@ -20,7 +20,7 @@ import theme from '../styles/theme';
 import checkConnection from '../../utils/checkConnection';
 import noInternetScreen from '../../utils/noInternetScreen';
 
-//Redux
+//Reduxs
 import useUserInfo from '../../hooks/useUserInfo';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/slices/userSlice';

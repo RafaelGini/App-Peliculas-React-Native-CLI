@@ -19,6 +19,7 @@ const ProfileScreen = () => {
   }
 
   const userInfo: UserInfo | null = useUserInfo()
+  console.log(userInfo)
 
 
   const {t} = useTranslation();
