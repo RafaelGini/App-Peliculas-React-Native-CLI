@@ -1,11 +1,12 @@
 // MovieList.jsx
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import Movie from '../../../interfaces/Movie';
 import MovieItem from './MovieItem';
 import theme from '../../styles/theme';
 import initialDataScreen from '../../../utils/initialDataScreen';
 import noDataScreen from '../../../utils/noDataScreen';
+import loadingScreen from '../../../utils/loadingScreen';
 
 interface MovieListProps {
   movies: Movie[],
@@ -18,7 +19,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies , searchInput}) => {
       data={movies}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => <MovieItem movie={item} />}
-      ListEmptyComponent={!searchInput ? initialDataScreen : noDataScreen}
+      ListEmptyComponent={!searchInput ? initialDataScreen : (movies ? loadingScreen : noDataScreen)}
       contentContainerStyle={styles.list}
     />
   );
@@ -26,7 +27,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies , searchInput}) => {
 
 const styles = StyleSheet.create({
   list: {
-    padding: 10,
+    //padding: 10,
     backgroundColor: theme.colors.background,
   },
 });

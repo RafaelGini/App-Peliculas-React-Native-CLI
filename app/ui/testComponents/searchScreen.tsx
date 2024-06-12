@@ -119,7 +119,7 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 5,
+    padding: 1,
     backgroundColor: theme.colors.background
   },
 });
