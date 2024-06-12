@@ -43,18 +43,9 @@ const SearchScreen = () => {
     }
     const newTimer = setTimeout(async () => {
       if (searchInput.trim().length > 0) {
-
-        console.log(`Sacamos el userInfo del CONTEX DE REDUX 
-          y le pasamos el id: \n ${userInfo?.id}\n`)
-
         const refreshedUserInfo = await refreshToken(userInfo?.id);
-
-        console.log(`Hacemos refresh token en el componente antes de llamar a las pelis 
-          y devuelve la info refrescada, ademas la guardamos en el context y luego llamamos al back: \n ${refreshedUserInfo}\n`)
-
         dispatch(setUser(refreshedUserInfo));
         setUserInfo(refreshedUserInfo)
-
         const fetchedMovies = await getMovies(searchInput, userInfo);
         setMovies(fetchedMovies);
       }
