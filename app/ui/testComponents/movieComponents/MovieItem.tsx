@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import Movie from '../../../interfaces/Movie';
 import theme from '../../styles/theme';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface MovieItemProps {
   movie: Movie;
@@ -15,9 +15,9 @@ const MovieItem: React.FC<MovieItemProps> = ({ movie }) => {
       <Image source={{ uri: movie.poster_path }} style={styles.poster} />
       <View style={styles.info}>
         <Text style={styles.title}>{movie.title}</Text>
-        <Text style={styles.releaseDate}>{movie.release_date}</Text>
-        <Text style={styles.vote}>{`Rating: ${movie.vote_average}`}</Text>
-        <Text style={styles.genres}>{`Genres: ${movie.genres.join(', ')}`}</Text>
+        <Text style={styles.releaseDate}><Ionicons name={"calendar"} size={13} color={theme.colors.text_light}/>  {movie.release_date}</Text>
+        <Text style={styles.vote}><Ionicons name={"star"} size={13} color={theme.colors.secondary}/>  {`Rating: ${movie.vote_average}`}</Text>
+        <Text style={styles.genres}><Ionicons name={"film"} size={13} color={theme.colors.text_light}/>  {`Genres: ${movie.genres.join(', ')}`}</Text>
       </View>
     </View>
   );
@@ -41,11 +41,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   title: {
+    flex: 1,
     fontSize: 18,
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
   releaseDate: {
+    flex: 1,
     fontSize: 14,
     color: theme.colors.text_light,
   },
@@ -54,10 +56,12 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   vote: {
+    flex: 1,
     fontSize: 14,
-    color: theme.colors.text,
+    color: theme.colors.secondary,
   },
   genres: {
+    flex: 1,
     fontSize: 14,
     color: theme.colors.text,
   },

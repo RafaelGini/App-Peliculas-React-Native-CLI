@@ -2,7 +2,7 @@
     "translation": {
       "LOGIN_GOOGLE": "Sign in with your Google account",
       "PLACEHOLDER_SEARCH": "Search movies...",
-      "PLACEHOLDER_NICKNAME": "*Please complete nickname*",
+      "PLACEHOLDER_NICKNAME": "*Please complete your nickname*",
       "SORT_DATE_T": "Date",
       "SORT_RATE_T": "Rating",
       "SORT_DEFAULT_T": "Default",
@@ -19,6 +19,12 @@
       "BUTTON_CHANGE_PIC": "Change profile picture",
       "BUTTON_SAVE_CHANGES": "Save changes",
       "BUTTON_LOGOUT": "Logout",
-      "BUTTON_DELETE_ACCOUNT": "Delete account"      
+      "BUTTON_DELETE_ACCOUNT": "Delete account",
+      "ALERT_LOGOUT_TITLE": "Are your sure you want to log out?",
+      "ALERT_LOGOUT_TEXT": "Your account will be deactivated and you will need to Log In again",
+      "ALERT_DELETE_TITLE": "Are your sure you want to delete your account?",
+      "ALERT_DELETE_TEXT": "This action can not be reversed and you will lose all your configuration and favorites",
+      "ALERT_CANCEL": "Cancel",      
+      "ALERT_CONTINUE": "Continue"      
    }
   }

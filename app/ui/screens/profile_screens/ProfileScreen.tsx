@@ -1,36 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import theme from '../../styles/theme';
 import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { MediaType, launchImageLibrary } from 'react-native-image-picker';
 import { useTranslation } from 'react-i18next';
 import useUserInfo from '../../../hooks/useUserInfo';
 import UserInfo from '../../../interfaces/UserInfo';
 
 const ProfileScreen = () => {
-  const profile = {
-    googleId: 'string',
-    name: 'Miguel',
-    surname: 'Martinez',
-    email: 'miguelmartinez@example.com',
-    nickname: 'MiguelMartinez01',
-    profileImage: 'https://i0.wp.com/lamiradafotografia.es/wp-content/uploads/2014/07/foto-perfil-psicologo.jpg?resize=180%2C180&ssl=1',
-  }
-
   const userInfo: UserInfo | null = useUserInfo()
   console.log(userInfo)
 
 
   const {t} = useTranslation();
 
-  const [nickname, setNickname] = useState(profile.nickname);
-  const [image, setImage] = useState(profile.profileImage);
+  const [nickname, setNickname] = useState(userInfo.nickname);
+  const [image, setImage] = useState(userInfo.profileImage);
 
   const handleChangePic = () => {
     // Lógica para guardar los cambios en el servidor
     const options = {
-      mediaType: 'photo',
+      mediaType: 'photo' as MediaType,
       includeBase64: false,
       maxHeight: 2000,
       maxWidth: 2000,
@@ -39,8 +30,8 @@ const ProfileScreen = () => {
     launchImageLibrary(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('Image picker error: ', response.error);
+      } else if (response.errorCode) {
+        console.log('Image picker error: ', response.errorMessage);
       } else {
         let imageUri = response.uri || response.assets?.[0]?.uri;
         setImage(imageUri);
@@ -69,6 +60,20 @@ const ProfileScreen = () => {
     if(!currentNick) {return true};
     return (currentNick == initialNick);
   };
+
+  const createAlertLogout = () => 
+    Alert.alert(t('ALERT_LOGOUT_TITLE'), t('ALERT_LOGOUT_TEXT'), [
+      {text: t('ALERT_CANCEL')},
+      {text: t('ALERT_CONTINUE'), onPress: handleLogout},
+    ],
+    {cancelable: true});
+
+  const createAlertDelete = () => 
+    Alert.alert(t('ALERT_DELETE_TITLE'), t('ALERT_DELETE_TEXT'), [
+      {text: t('ALERT_CANCEL')},
+      {text: t('ALERT_CONTINUE'), onPress: handleDeleteAccount},
+    ],
+    {cancelable: true});
 
   if (checkConnection() === false) {
     return (
@@ -101,23 +106,23 @@ const ProfileScreen = () => {
         <Text style={styles.label}>{t('LABEL_NAME')}</Text>
         <TextInput
           style={styles.input}
-          value={profile.name+' '+profile.surname}
+          value={userInfo.name+' '+userInfo.surname}
           editable={false}
         />
         <Text style={styles.label}>{t('LABEL_EMAIL')}</Text>
         <TextInput
           style={styles.input}
-          value={profile.email}
+          value={userInfo.email}
           editable={false}
         />
-        <TouchableOpacity style={handleActiveSave(nickname, profile.nickname) ? [styles.buttonContainerDefault, styles.buttonContainerInactive] : [styles.buttonContainerDefault, styles.buttonContainerChanges]} 
-                          onPress={handleSaveChanges} disabled={handleActiveSave(nickname, profile.nickname)}>
+        <TouchableOpacity style={handleActiveSave(nickname, userInfo.nickname) ? [styles.buttonContainerDefault, styles.buttonContainerInactive] : [styles.buttonContainerDefault, styles.buttonContainerChanges]} 
+                          onPress={handleSaveChanges} disabled={handleActiveSave(nickname, userInfo.nickname)}>
           <Text style={styles.buttonText}>{t('BUTTON_SAVE_CHANGES')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerLogout]} onPress={handleLogout}>
+        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerLogout]} onPress={createAlertLogout}>
           <Text style={styles.buttonText}>{t('BUTTON_LOGOUT')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerDelete]} onPress={handleDeleteAccount}>
+        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerDelete]} onPress={createAlertDelete}>
           <Text style={styles.buttonText}>{t('BUTTON_DELETE_ACCOUNT')}</Text>
         </TouchableOpacity>
       </View>
