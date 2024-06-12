@@ -26,6 +26,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/slices/userSlice';
 
 const SearchScreen = () => {
+  
   const [searchInput, setSearchInput] = useState<string>('');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);

@@ -1,9 +1,9 @@
 export default interface GoogleUserInfo {
-    name: string;
-    surname: string; 
+    name: string | null;
+    surname: string | null; 
     email: string;
     nickname: string; 
-    profileImage: string;
+    profileImage: string | null;
     googleId: string;
 }
 

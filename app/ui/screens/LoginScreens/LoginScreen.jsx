@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import theme from '../../styles/theme';
-import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin';
+import { GoogleSignin, GoogleSigninButton, User } from '@react-native-community/google-signin';
 import { useTranslation } from 'react-i18next';
 import { login } from '../../../services/loginAPIService';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
+import GoogleUserInfo from '../../../interfaces/GoogleUserInfo';
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
@@ -14,7 +15,7 @@ GoogleSignin.configure({
 
 const mapToGoogleUserInfo = (userInfo) => {
   return {
-    name: userInfo.user.givenName,
+    name: userInfo.user.name,
     surname: userInfo.user.familyName,
     email: userInfo.user.email,
     nickname: "",
@@ -32,10 +33,8 @@ const LoginScreen = ({ navigation }) => {
       
       await GoogleSignin.hasPlayServices();
       const googleUserInfo = await GoogleSignin.signIn();
-      const mappedUserInfo = mapToGoogleUserInfo(googleUserInfo);
-      const userInfoResponse = await login(mappedUserInfo)
-
-      console.log(userInfoResponse);
+      const userInfoResponse = await login(mapToGoogleUserInfo(googleUserInfo))
+      console.log("Inicio de sesion exitoso: ", userInfoResponse);
 
       dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');

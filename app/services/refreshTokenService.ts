@@ -19,5 +19,4 @@ async function refreshToken(userId: number | undefined): Promise<UserInfo> {
         throw error;
     }
 }
-
 export { refreshToken };
