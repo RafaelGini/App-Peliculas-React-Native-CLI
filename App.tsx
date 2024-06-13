@@ -35,7 +35,10 @@ const App = () => {
         <Stack.Navigator>
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
+
+          {/* @ts-ignore */}
           <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
+          
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
