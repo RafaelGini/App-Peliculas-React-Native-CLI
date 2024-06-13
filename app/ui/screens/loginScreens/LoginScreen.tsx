@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Alert } from 'react-native';
 import theme from '../../styles/theme';
 import { GoogleSignin, GoogleSigninButton, User } from '@react-native-community/google-signin';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation }) => {
 
   const signIn = async () => {
     try {
-      
+
       await GoogleSignin.hasPlayServices();
       const googleUserInfo = await GoogleSignin.signIn();
       const userInfoResponse = await login(mapToGoogleUserInfo(googleUserInfo))
@@ -40,7 +40,14 @@ const LoginScreen = ({ navigation }) => {
       navigation.replace('HomeTabs');
 
     } catch (error) {
-      console.log(error);
+      Alert.alert(
+        'Error al iniciar sesión',
+        `Ocurrió un problema al intentar iniciar sesión: ${error}`,
+        [
+          { text: 'OK', onPress: () => console.log('OK Pressed') }
+        ],
+        { cancelable: false }
+      );
     }
   };
 
