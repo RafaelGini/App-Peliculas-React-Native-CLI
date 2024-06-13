@@ -1,7 +1,7 @@
 // FilterButton.jsx
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import theme from '../styles/theme';
+import theme from '../../styles/theme';
 
 interface FilterButtonProps {
   title: string;

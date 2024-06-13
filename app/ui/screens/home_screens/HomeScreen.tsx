@@ -1,9 +1,11 @@
+//React
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 //Styling
 import theme from '../../styles/theme';
 
+// @ts-ignore
 const List = ({ navigation }) => {
   return (
     <View style={styles.listContainer}>
@@ -13,6 +15,7 @@ const List = ({ navigation }) => {
   );
 };
 
+// @ts-ignore
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>

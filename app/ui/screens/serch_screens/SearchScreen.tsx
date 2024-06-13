@@ -1,114 +1,127 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+//React
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+
+//Services
+import { getMovies } from '../../../services/searchMovies';
+import { refreshToken } from '../../../services/refreshTokenService';
+
+//Interfaces
+import Movie from '../../../interfaces/Movie';
+import UserInfo from '../../../interfaces/UserInfo';
+
+//Components - UI
+import SearchScreenUI from './UI_searchScreen';
+
+//Styles
 import theme from '../../styles/theme';
-import Item from './Item'
-import { MovieItem } from './Interfaces';
-import styles from './searchStyles'
-import { propertyData } from './testData';
-import { searchMovies } from './searchServices';
+
+//Conection
+import checkConnection from '../../../utils/checkConnection';
+import noInternetScreen from '../../../utils/noInternetScreen';
+
+//Reduxs
+import useUserInfo from '../../../hooks/useUserInfo';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../redux/slices/userSlice';
 
 const SearchScreen = () => {
-  const [searchText, setSearchText] = useState('');
-  const [iconDate, setIconDate] = useState("");
-  const [iconRate, setIconRate] = useState("");
-  const [data, setData] = useState<MovieItem[]>([]);
+  
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [filter, setFilter] = useState<'date' | 'rating' | 'default'>('default');
+  const [sorter, setSorter] = useState<'asc' | 'desc'>('desc');
+  const [movieList, setMovieList] = useState<Movie[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
 
-  const fetchData = async (query: string) => {
-    try {
-      const movies = await searchMovies(query);
-      setData(movies);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    const newTimer = setTimeout(async () => {
+      if (searchInput.trim().length > 0) {
+        const refreshedUserInfo = await refreshToken(userInfo?.id);
+        dispatch(setUser(refreshedUserInfo));
+        setUserInfo(refreshedUserInfo)
+        const fetchedMovies = await getMovies(searchInput, userInfo);
+        setMovies(fetchedMovies);
+      }
+    }, 500);
+
+    setTimer(newTimer);
+    return () => {
+      if (newTimer) {
+        clearTimeout(newTimer);
+      }
+    };
+  }, [searchInput]);
+
+  useEffect(() => {
+    let sortedMovies = [...movies];
+    if (filter === 'date') {
+      sortedMovies.sort((a, b) => {
+        if (sorter === 'asc') {
+          return new Date(a.release_date).getTime() - new Date(b.release_date).getTime();
+        } else {
+          return new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
+        }
+      });
+    } else if (filter === 'rating') {
+      sortedMovies.sort((a, b) => {
+        if (sorter === 'asc') {
+          return a.vote_average - b.vote_average;
+        } else {
+          return b.vote_average - a.vote_average;
+        }
+      });
+    }
+    setMovieList(sortedMovies);
+  }, [movies, filter, sorter]);
+
+  const handleFilter = (selectedFilter: 'date' | 'rating' | 'default') => {
+    console.log(`Se cambio a ${selectedFilter}`)
+    setFilter(selectedFilter);
+    if (selectedFilter === 'default') {
+      setSorter('desc');
     }
   };
-  
-  useEffect(() => {
-    fetchData(searchText); 
-  }, [searchText]);
 
-  const handleSearch = (text: string) => {
-    setSearchText(text);
-  };
-  
-  const renderItem = ({ item }: { item: MovieItem }) => <Item item={item} />;
-
-  const sortByDate = () => {
-    setIconRate("");
-    data.sort(function (a, b) {
-      const dateA = new Date(a.release_date);
-      const dateB = new Date(b.release_date);
-      
-      if (iconDate === "arrow-down") {
-        return dateA.getTime() - dateB.getTime(); // Descendente
-      } else {
-        return dateB.getTime() - dateA.getTime(); // Ascendente
-      }
-    });
-    setData([...data]);
-    iconDate === "arrow-down" ? setIconDate("arrow-up") : setIconDate("arrow-down");
-  };
-  
-
-  const sortByRate = () => {
-    setIconDate("");
-    data.sort(function (a, b) {
-      if (iconRate == "arrow-down") {
-        return a.vote_average - b.vote_average; //Descendente
-      } else {
-        return b.vote_average - a.vote_average; //Ascendente
-      }
-    });
-    setData([...data]);
-    iconRate == "arrow-down" ? setIconRate("arrow-up") : setIconRate("arrow-down");
+  const toggleSorter = () => {
+    setSorter(sorter === 'asc' ? 'desc' : 'asc');
   };
 
-  const filter = () => {
-    //API Call para traer datos, usar searchText ??
-    setData([]);
-  };
+  if (checkConnection() === false) {
+    return (
+      <View style={styles.container}>
+        {noInternetScreen()}
+      </View>
+    )
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchInputContainer}>
-        <View style={styles.searchInputText}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Busca por título o actor..."
-            placeholderTextColor={theme.colors.text_light}
-            onChangeText={handleSearch}
-            value={searchText}
-          />
-        </View>
-        <View style={styles.searchInputButton}>
-          <TouchableOpacity style={styles.searchButton} onPress={filter}>
-            <Ionicons name={"search"} size={styles.movieRate.fontSize} color={theme.colors.primary} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.sortContainer}>
-        <View style={styles.sortLineBox}>
-          <TouchableOpacity style={styles.sortButton} onPress={sortByDate}>
-            <Text style={styles.sortText}>Fecha <Ionicons name={iconDate} size={styles.movieRate.fontSize} color={theme.colors.primary} /></Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.sortLineBox}>
-          <TouchableOpacity style={styles.sortButton} onPress={sortByRate}>
-            <Text style={styles.sortText}>Calificación <Ionicons name={iconRate} size={styles.movieRate.fontSize} color={theme.colors.primary} /> </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <FlatList
-        contentContainerStyle={styles.listContainer}
-        //data={filteredData}
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+      <SearchScreenUI
+        movies={movieList}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        handleFilter={handleFilter}
+        toggleSorter={toggleSorter}
+        currentFilter={filter}
+        currentSorter={sorter}
       />
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 1,
+    backgroundColor: theme.colors.background
+  },
+});
 
 export default SearchScreen;

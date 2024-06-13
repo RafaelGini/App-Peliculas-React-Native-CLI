@@ -1,17 +1,16 @@
-//React
+//React - Navigation
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Screens y componentes
-import HomeScreen from '../ui/screens/home_screens/HomeScreen';
-//import SearchScreen from '../ui/screens/serch_screens/SearchScreen';
-import SearchScreen from '../ui/testComponents/searchScreen';
-import FavoritesScreen from '../ui/screens/favorites_screens/FavoritesScreen';
-import ProfileScreen from '../ui/screens/profile_screens/ProfileScreen';
+import HomeScreen from '../../screens/home_screens/HomeScreen';
+import SearchScreen from '../../screens/serch_screens/searchScreen';
+import FavoritesScreen from '../../screens/favorites_screens/FavoritesScreen';
+import ProfileScreen from '../../screens/profile_screens/ProfileScreen';
 
 //Styling
-import theme from '../ui/styles/theme';
+import theme from '../../styles/theme';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +23,7 @@ function HomeTabs() {
         },
         headerTintColor: theme.colors.text, // Color del texto del header
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          let iconName: string = 'home-outline';
 
           switch (route.name) {
             case 'Home':
@@ -45,7 +44,7 @@ function HomeTabs() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.grey,
         tabBarStyle: {
-          backgroundColor: theme.colors.background, // Color de la tab bar
+          backgroundColor: theme.colors.background, 
           height: 80,  
           paddingBottom: 10,  
           paddingTop: 10,  
@@ -55,12 +54,10 @@ function HomeTabs() {
         },
       })}
     >
-
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Favorites" component={FavoritesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
-
     </Tab.Navigator>
   );
 }

@@ -3,11 +3,17 @@ import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+//Splash
 import SplashScreen from 'react-native-splash-screen';
+
+//Redux
 import { Provider } from 'react-redux';
 import store from '../../../redux/store';
+
+//Components
 import LoginScreen from '../../screens/loginScreens/LoginScreen';
-import HomeTabs from '../../../Navigation/HomeTabs';
+import HomeTabs from './HomeTabs';
 import MovieDetailsScreen from '../../screens/movieDetailsScreen/MovieDetailScreen';
 
 const Stack = createNativeStackNavigator();

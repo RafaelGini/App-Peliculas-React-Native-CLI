@@ -1,6 +1,9 @@
+//React
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import MovieList from '../../components/movies_components/MovieList';
+
+//Components
+import MovieList from '../../components/movie_components/MovieList';
 
 interface HomeScreenUIProps {
   userName: string;
@@ -10,7 +13,7 @@ const HomeScreenUI: React.FC<HomeScreenUIProps> = ({ userName }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}> Hola! {userName}</Text>
-      <MovieList />
+      {/*<MovieList movies={}/>*/}
     </View>
   );
 };

@@ -1,10 +1,10 @@
 // SearchScreenUI.jsx
 import React from 'react';
 import { FlatList, View, TextInput, StyleSheet, Text } from 'react-native';
-import Movie from '../../interfaces/Movie';
-import theme from '../styles/theme';
-import FilterButton from '../screens/serch_screens/FilterButton';
-import MovieList from '../components/movie_components/MovieList';
+import Movie from '../../../interfaces/Movie';
+import theme from '../../styles/theme';
+import FilterButton from './FilterButton';
+import MovieList from '../../components/movie_components/MovieList';
 import { useTranslation } from 'react-i18next';
 
 interface SearchScreenUIProps {

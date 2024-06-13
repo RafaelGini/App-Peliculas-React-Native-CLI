@@ -1,27 +1,28 @@
+//React
 import React from 'react';
 import { View, Text, StyleSheet, Image, Alert } from 'react-native';
-import theme from '../../styles/theme';
+
+//Google Api
 import { GoogleSignin, GoogleSigninButton, User } from '@react-native-community/google-signin';
-import { useTranslation } from 'react-i18next';
-import { login } from '../../../services/loginAPIService';
+
+//Redux
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
+
+//Utilis
+import { useTranslation } from 'react-i18next';
+
+//Styles
+import theme from '../../styles/theme';
+
+//Services
+import { login } from '../../../services/loginAPIService';
+import UserInfo from '../../../interfaces/UserInfo';
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
   offlineAccess: true
 });
-
-const mapToGoogleUserInfo = (userInfo: User) => {
-  return {
-    name: userInfo.user.name,
-    surname: userInfo.user.familyName,
-    email: userInfo.user.email,
-    nickname: "",
-    profileImage: userInfo.user.photo,
-    googleId: userInfo.user.id
-  };
-};
 
 // @ts-ignore
 const LoginScreen = ({ navigation }) => {
@@ -32,13 +33,12 @@ const LoginScreen = ({ navigation }) => {
     try {
 
       await GoogleSignin.hasPlayServices();
-      const googleUserInfo = await GoogleSignin.signIn();
-      const userInfoResponse = await login(mapToGoogleUserInfo(googleUserInfo))
-      console.log("Inicio de sesion exitoso: ", userInfoResponse);
-
+      const googleUserInfo: User = await GoogleSignin.signIn();
+      const userInfoResponse: UserInfo = await login(mapToGoogleUserInfo(googleUserInfo))
+      console.log("Inicio de sesion exitoso: ", 
+        userInfoResponse.id, userInfoResponse.email, userInfoResponse.token);
       dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');
-
     } catch (error) {
       Alert.alert(
         'Error al iniciar sesión',
@@ -64,6 +64,17 @@ const LoginScreen = ({ navigation }) => {
       />
     </View>
   );
+};
+
+const mapToGoogleUserInfo = (userInfo: User) => {
+  return {
+    name: userInfo.user.name,
+    surname: userInfo.user.familyName,
+    email: userInfo.user.email,
+    nickname: "",
+    profileImage: userInfo.user.photo,
+    googleId: userInfo.user.id
+  };
 };
 
 const styles = StyleSheet.create({
