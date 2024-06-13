@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Screens y componentes
 import HomeScreen from '../../screens/home_screens/HomeScreen';
-import SearchScreen from '../../screens/serch_screens/searchScreen';
+import SearchScreen from '../../screens/serch_screens/SearchScreen';
 import FavoritesScreen from '../../screens/favorites_screens/FavoritesScreen';
 import ProfileScreen from '../../screens/profile_screens/ProfileScreen';
 
