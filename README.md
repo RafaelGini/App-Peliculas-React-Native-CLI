@@ -33,7 +33,8 @@ Este proyecto es una aplicación de películas desarrollada con React Native CLI
     ```
 
 3. Configura el entorno de desarrollo:
-    - Para Android, asegúrate de tener Android Studio instalado y configurado.
+    - Para Android, asegúrate de tener Android Studio instalado y configurado:
+    - https://reactnative.dev/docs/environment-setup
 
 4. Corre la aplicación:
     - Para Android:
