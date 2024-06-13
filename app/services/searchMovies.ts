@@ -19,7 +19,6 @@ async function getMovies(userInput: string, userInfo: UserInfo | null): Promise<
       console.log(movies)
       return movies;
     } catch (error) {
-      console.error('Error fetching movies:', error);
       return [];
 
     }

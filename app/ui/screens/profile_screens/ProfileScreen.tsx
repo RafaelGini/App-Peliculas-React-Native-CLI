@@ -1,135 +1,200 @@
+//React - Navigation
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import theme from '../../styles/theme';
+import { View, Alert, StyleSheet, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+//Services
+import { uploadImage } from '../../../services/uploadImageService';
+import { refreshToken } from '../../../services/refreshTokenService';
+import { updateUser } from '../../../services/updateUserService';
+import { logoutUser } from '../../../services/logOutUserService';
+import { deleteAccount } from '../../../services/deleteUserService';
+
+//Redux
+import useUserInfo from '../../../hooks/useUserInfo';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../redux/slices/userSlice';
+
+//Handle Conecion
 import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
-import { MediaType, launchImageLibrary } from 'react-native-image-picker';
+
+//File handle
+import { launchImageLibrary, ImagePickerResponse, MediaType } from 'react-native-image-picker';
+//Utils
 import { useTranslation } from 'react-i18next';
-import useUserInfo from '../../../hooks/useUserInfo';
+//Components
+import UI_ProfileScreen from './UI_ProfileScreen';
+//Styling
+import theme from '../../styles/theme';
+//Interfaces
 import UserInfo from '../../../interfaces/UserInfo';
 
-const ProfileScreen = () => {
-  const userInfo: UserInfo | null = useUserInfo()
-  console.log(userInfo)
-
-
-  const {t} = useTranslation();
-
-  const [nickname, setNickname] = useState(userInfo.nickname);
-  const [image, setImage] = useState(userInfo.profileImage);
+const ProfileScreen: React.FC = () => {
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
+  const { t } = useTranslation();
+  const [nickname, setNickname] = useState<string>(userInfo?.nickname || '');
+  const [image, setImage] = useState<string>(userInfo?.profileImage || '');
+  const [uploading, setUploading] = useState<boolean>(false);
+  
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const handleChangePic = () => {
-    // Lógica para guardar los cambios en el servidor
     const options = {
       mediaType: 'photo' as MediaType,
       includeBase64: false,
       maxHeight: 2000,
       maxWidth: 2000,
     };
-      
-    launchImageLibrary(options, (response) => {
+
+    const handleUploadImage = async (imageUri: string) => {
+      if (!userInfo) return;
+      setUploading(true);
+      try {
+        const refreshedUserInfo = await refreshToken(userInfo?.id);
+        dispatch(setUser(refreshedUserInfo));
+        setUserInfo(refreshedUserInfo)
+        const updatedUserInfo = await uploadImage(userInfo.id, imageUri, userInfo.token);
+        setImage(updatedUserInfo.profileImage);
+        setNickname(updatedUserInfo.nickname);
+        console.log('Imagen actualizada', updatedUserInfo);
+        dispatch(setUser(updatedUserInfo));
+      } catch (error) {
+        console.error('Error uploading image', error);
+      } finally {
+        setUploading(false);
+      }
+    };
+
+    launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorCode) {
         console.log('Image picker error: ', response.errorMessage);
-      } else {
-        let imageUri = response.uri || response.assets?.[0]?.uri;
-        setImage(imageUri);
-        //Post nueva imagen perfil
+      } else if (response.assets && response.assets.length > 0) {
+        const imageUri = response.assets[0].uri;
+        if (imageUri) {
+          setImage(imageUri);
+          handleUploadImage(imageUri);
+        }
       }
     });
     console.log('Cambiar foto');
   };
 
-  const handleSaveChanges = () => {
-    // Lógica para guardar los cambios en el servidor
-    console.log('Cambios guardados');
+  const handleSaveChanges = async () => {
+    if (!userInfo) return;
+    try {
+      const refreshedUserInfo = await refreshToken(userInfo?.id);
+      dispatch(setUser(refreshedUserInfo));
+      setUserInfo(refreshedUserInfo)
+      const updatedUserInfo = await updateUser(userInfo.id, { nickname }, userInfo.token);
+      console.log('Usuario actualizado', updatedUserInfo);
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
   };
 
-  const handleLogout = () => {
-    // Lógica para cerrar sesión
-    console.log('Sesión cerrada');
+  const handleLogout = async () => {
+    try {
+      await logoutUser(userInfo?.id, userInfo?.token);
+      // @ts-ignore
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      Alert.alert('Error', 'Hubo un problema al intentar cerrar sesión. Inténtalo de nuevo más tarde.');
+    }
   };
 
-  const handleDeleteAccount = () => {
-    // Lógica para eliminar la cuenta
-    console.log('Cuenta eliminada');
+  const handleDeleteAccount = async () => {
+    if (!userInfo) return;
+
+    try {
+      await deleteAccount(userInfo.id, userInfo.token);
+      dispatch(setUser(emptyUserInfo())); 
+      // @ts-ignore
+      navigation.replace('Login'); 
+      console.log("CUENTA ELIMINADA")
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      Alert.alert('Error', 'Hubo un problema al intentar eliminar la cuenta. Inténtalo de nuevo más tarde.');
+    }
   };
 
   const handleActiveSave = (currentNick: string, initialNick: string) => {
-    if(!currentNick) {return true};
-    return (currentNick == initialNick);
+    if (!currentNick) return true;
+    return currentNick === initialNick;
   };
 
-  const createAlertLogout = () => 
+  const createAlertLogout = () =>
     Alert.alert(t('ALERT_LOGOUT_TITLE'), t('ALERT_LOGOUT_TEXT'), [
-      {text: t('ALERT_CANCEL')},
-      {text: t('ALERT_CONTINUE'), onPress: handleLogout},
-    ],
-    {cancelable: true});
+      { text: t('ALERT_CANCEL') },
+      { text: t('ALERT_CONTINUE'), onPress: handleLogout },
+    ], { cancelable: true });
 
-  const createAlertDelete = () => 
+  const createAlertDelete = () =>
     Alert.alert(t('ALERT_DELETE_TITLE'), t('ALERT_DELETE_TEXT'), [
-      {text: t('ALERT_CANCEL')},
-      {text: t('ALERT_CONTINUE'), onPress: handleDeleteAccount},
-    ],
-    {cancelable: true});
+      { text: t('ALERT_CANCEL') },
+      { text: t('ALERT_CONTINUE'), onPress: handleDeleteAccount },
+    ], { cancelable: true });
 
   if (checkConnection() === false) {
     return (
       <View style={styles.container}>
         {noInternetScreen()}
       </View>
-    )
+    );
+  }
+
+  if (!userInfo) {
+    return (
+      <View style={styles.container}>
+        <Text>{t('ERROR_LOADING_USER_INFO')}</Text>
+      </View>
+    );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={{uri: image}}
-        />
-        <TouchableOpacity style={styles.changeAvatarButton} onPress={handleChangePic}>
-          <Text style={styles.changeAvatarButtonText}>{t('BUTTON_CHANGE_PIC')}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>{t('LABEL_NICKNAME')}</Text>
-        <TextInput
-          style={[styles.input, styles.inputEdit]}
-          placeholder={t('PLACEHOLDER_NICKNAME')}
-          placeholderTextColor={theme.colors.red}
-          value={nickname}
-          onChangeText={setNickname}
-        />
-        <Text style={styles.label}>{t('LABEL_NAME')}</Text>
-        <TextInput
-          style={styles.input}
-          value={userInfo.name+' '+userInfo.surname}
-          editable={false}
-        />
-        <Text style={styles.label}>{t('LABEL_EMAIL')}</Text>
-        <TextInput
-          style={styles.input}
-          value={userInfo.email}
-          editable={false}
-        />
-        <TouchableOpacity style={handleActiveSave(nickname, userInfo.nickname) ? [styles.buttonContainerDefault, styles.buttonContainerInactive] : [styles.buttonContainerDefault, styles.buttonContainerChanges]} 
-                          onPress={handleSaveChanges} disabled={handleActiveSave(nickname, userInfo.nickname)}>
-          <Text style={styles.buttonText}>{t('BUTTON_SAVE_CHANGES')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerLogout]} onPress={createAlertLogout}>
-          <Text style={styles.buttonText}>{t('BUTTON_LOGOUT')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.buttonContainerDefault, styles.buttonContainerDelete]} onPress={createAlertDelete}>
-          <Text style={styles.buttonText}>{t('BUTTON_DELETE_ACCOUNT')}</Text>
-        </TouchableOpacity>
-      </View>
-
-    </View>
+    <UI_ProfileScreen
+      t={t}
+      image={image}
+      nickname={nickname}
+      name={userInfo.name}
+      surname={userInfo.surname}
+      email={userInfo.email}
+      handleChangePic={handleChangePic}
+      handleSaveChanges={handleSaveChanges}
+      handleActiveSave={handleActiveSave}
+      createAlertLogout={createAlertLogout}
+      createAlertDelete={createAlertDelete}
+      setNickname={setNickname}
+    />
   );
 };
+
+const emptyUserInfo = (): UserInfo => {
+  return {
+    name: '',
+    surname: '',
+    email: '',
+    nickname: '',
+    profileImage: '',
+    googleId: '',
+    status: false,
+    token: '',
+    enabled: false,
+    username: '',
+    password: '',
+    authority: [],
+    accountNonExpired: false,
+    accountNonLocked: false,
+    credentialsNonExpired: false,
+    id: 0,
+  };
+};
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -137,72 +202,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: theme.colors.background,
-  },
-  form: {
-    justifyContent: 'center',
-    width: '80%',
-  },
-  label: {
-    marginTop: 14,
-    color: theme.colors.text,
-  },
-  input: {
-    borderColor: theme.colors.grey,
-    borderWidth: 1,
-    borderRadius: 25,
-    marginTop: 3,
-    height: 40,
-    padding: 10,
-    fontSize: 16,
-    color: theme.colors.text_light,
-  },
-  inputEdit: {
-    color: theme.colors.text,
-  },
-  buttonContainerDefault: {
-    marginTop: 10,
-    alignSelf: 'center',
-    alignItems: 'center',
-    width: 170,
-    borderRadius: 30,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-  },
-  buttonContainerChanges: {
-    backgroundColor: theme.colors.primary,
-    marginTop: 20,
-  },
-  buttonContainerInactive: {
-    backgroundColor: theme.colors.primary_inactive,
-    marginTop: 20,
-  },
-  buttonContainerLogout: {
-    backgroundColor: theme.colors.grey,
-  },
-  buttonContainerDelete: {
-    backgroundColor: theme.colors.red,
-  },
-  buttonText: {
-    color: theme.colors.background,
-    fontSize: 12,
-  },
-  avatarContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-  },
-  changeAvatarButton: {
-    marginTop: 5,
-  },
-  changeAvatarButtonText: {
-    color: theme.colors.primary,
-    fontSize: 14,
   },
 });
 

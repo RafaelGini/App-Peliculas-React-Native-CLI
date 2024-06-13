@@ -6,14 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { login } from '../../../services/loginAPIService';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
-import GoogleUserInfo from '../../../interfaces/GoogleUserInfo';
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
   offlineAccess: true
 });
 
-const mapToGoogleUserInfo = (userInfo) => {
+const mapToGoogleUserInfo = (userInfo: User) => {
   return {
     name: userInfo.user.name,
     surname: userInfo.user.familyName,
@@ -24,6 +23,7 @@ const mapToGoogleUserInfo = (userInfo) => {
   };
 };
 
+// @ts-ignore
 const LoginScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
