@@ -1,47 +1,108 @@
-//React
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+// React
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 
-//Styling
-import theme from '../../styles/theme';
-
-//Services
-import { getMoviesNoPrompt } from '../../../services/getMoviesServices';
+// Services
+import { getLatestMovies } from '../../../services/latestMoviesService'; // Cambis películas más nuevas
 import { refreshToken } from '../../../services/refreshTokenService';
 
-//Components
-import MovieList from '../../components/movie_components/MovieList';
-
-//Interfaces
+// Interfaces
 import Movie from '../../../interfaces/Movie';
 import UserInfo from '../../../interfaces/UserInfo';
 
-//Redux
+// Components - UI
+import HomeScreenUI from './HomeScreenUI';
+
+// Styles
+import theme from '../../styles/theme';
+
+// Connection
+import checkConnection from '../../../utils/checkConnection';
+import noInternetScreen from '../../../utils/noInternetScreen';
+
+// Redux
 import useUserInfo from '../../../hooks/useUserInfo';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
 
-// @ts-ignore
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
+  const [filter, setFilter] = useState<'date' | 'rating' | 'default'>('default');
+  const [sorter, setSorter] = useState<'asc' | 'desc'>('desc');
+  const [movieList, setMovieList] = useState<Movie[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const dispatch = useDispatch();
 
+  // Fetch a las mas nuevas
   useEffect(() => {
     const fetchMovies = async () => {
-      const refreshedUserInfo = await refreshToken(userInfo?.id);
+      setIsLoading(true);
+      const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
+      console.log("Data del usuario refrescada");
       dispatch(setUser(refreshedUserInfo));
       setUserInfo(refreshedUserInfo);
-      const fetchedMovies = await getMoviesNoPrompt(userInfo);
+      const fetchedMovies = await getLatestMovies(refreshedUserInfo);
       setMovies(fetchedMovies);
-      console.log(movies)
+      setIsLoading(false);
+    };
+
+    fetchMovies();
+  }, []);
+
+  // Sorter
+  useEffect(() => {
+    let sortedMovies = [...movies];
+    if (filter === 'date') {
+      sortedMovies.sort((a, b) => {
+        if (sorter === 'asc') {
+          return new Date(a.release_date).getTime() - new Date(b.release_date).getTime();
+        } else {
+          return new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
+        }
+      });
+    } else if (filter === 'rating') {
+      sortedMovies.sort((a, b) => {
+        if (sorter === 'asc') {
+          return a.vote_average - b.vote_average;
+        } else {
+          return b.vote_average - a.vote_average;
+        }
+      });
     }
-  }, [movies])
+    setMovieList(sortedMovies);
+  }, [movies, filter, sorter]);
+
+  const handleFilter = (selectedFilter: 'date' | 'rating' | 'default') => {
+    setFilter(selectedFilter);
+    if (selectedFilter === 'default') {
+      setSorter('desc');
+    }
+  };
+
+  const toggleSorter = () => {
+    setSorter(sorter === 'asc' ? 'desc' : 'asc');
+  };
+
+  if (checkConnection() === false) {
+    return (
+      <View style={styles.container}>
+        {noInternetScreen()}
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Esta es la pantalla Home</Text>
-      <MovieList movies={movies} searchInput=''/>
+      <HomeScreenUI
+        movies={movieList}
+        handleFilter={handleFilter}
+        toggleSorter={toggleSorter}
+        currentFilter={filter}
+        currentSorter={sorter}
+        isLoading={isLoading}
+      />
     </View>
   );
 };
@@ -49,16 +110,9 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.background, 
+    padding: 1,
+    backgroundColor: theme.colors.background,
   },
-  listContainer: {
-    marginTop: 20,
-  },
-  text: { 
-    color: theme.colors.text,
-  }
 });
 
 export default HomeScreen;
