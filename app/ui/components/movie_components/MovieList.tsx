@@ -1,11 +1,12 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View, Text } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Movie from '../../../interfaces/Movie';
 import MovieItem from './MovieItem';
 import theme from '../../styles/theme';
 import initialDataScreen from '../../../utils/initialDataScreen';
 import noDataScreen from '../../../utils/noDataScreen';
 import loadingScreen from '../../../utils/loadingScreen';
+import { useNavigation } from '@react-navigation/native';
 
 interface MovieListProps {
   movies: Movie[],
@@ -14,6 +15,13 @@ interface MovieListProps {
 }
 
 const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading }) => {
+  const navigation = useNavigation();
+
+  const handleMoviePress = (movieId: number) => {
+    //@ts-ignore
+    navigation.navigate('MovieDetail', { movieId });
+  };
+  
   if (isLoading) {
     return loadingScreen();
   }
@@ -30,7 +38,11 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading })
     <FlatList
       data={movies}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => <MovieItem movie={item} />}
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => handleMoviePress(item.id)}>
+          <MovieItem movie={item} />
+        </TouchableOpacity>
+      )}
       contentContainerStyle={styles.list}
     />
   );

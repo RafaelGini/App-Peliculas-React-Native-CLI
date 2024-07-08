@@ -14,7 +14,7 @@ import store from '../../../redux/store';
 //Components
 import LoginScreen from '../../screens/loginScreens/LoginScreen';
 import HomeTabs from './HomeTabs';
-import MovieDetailsScreen from '../../screens/movieDetailsScreen/MovieDetailScreen';
+import MovieDetail from '../../screens/movieDetailsScreen/MovieDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +34,7 @@ const Navigation = () => {
           <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
 
           {/* @ts-ignore */}
-          <Stack.Screen name="MovieDetails" component={MovieDetailsScreen} />
+          <Stack.Screen name="MovieDetail" component={MovieDetail} />
 
         </Stack.Navigator>
       </NavigationContainer>
