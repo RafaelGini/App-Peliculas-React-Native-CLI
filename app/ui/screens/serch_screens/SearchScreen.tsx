@@ -33,23 +33,28 @@ const SearchScreen = () => {
   const [filter, setFilter] = useState<'date' | 'rating' | 'default'>('default');
   const [sorter, setSorter] = useState<'asc' | 'desc'>('desc');
   const [movieList, setMovieList] = useState<Movie[]>([]);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
+  //Busqueda
   useEffect(() => {
     if (timer) {
       clearTimeout(timer);
     }
     const newTimer = setTimeout(async () => {
       if (searchInput.trim().length > 0) {
-        const refreshedUserInfo = await refreshToken(userInfo?.id);
+        setIsLoading(true);
+        const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
+        console.log("Data del usuario refrescada", refreshedUserInfo);
         dispatch(setUser(refreshedUserInfo));
-        setUserInfo(refreshedUserInfo)
+        setUserInfo(refreshedUserInfo);
         const fetchedMovies = await getMovies(searchInput, userInfo);
         setMovies(fetchedMovies);
+        setIsLoading(false);
       }
-    }, 500);
+    }, 600);
 
     setTimer(newTimer);
     return () => {
@@ -59,6 +64,7 @@ const SearchScreen = () => {
     };
   }, [searchInput]);
 
+  //Sorter
   useEffect(() => {
     let sortedMovies = [...movies];
     if (filter === 'date') {
@@ -82,7 +88,6 @@ const SearchScreen = () => {
   }, [movies, filter, sorter]);
 
   const handleFilter = (selectedFilter: 'date' | 'rating' | 'default') => {
-    console.log(`Se cambio a ${selectedFilter}`)
     setFilter(selectedFilter);
     if (selectedFilter === 'default') {
       setSorter('desc');
@@ -111,6 +116,7 @@ const SearchScreen = () => {
         toggleSorter={toggleSorter}
         currentFilter={filter}
         currentSorter={sorter}
+        isLoading={isLoading}
       />
     </View>
   );

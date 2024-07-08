@@ -1,26 +1,47 @@
 //React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 //Styling
 import theme from '../../styles/theme';
 
-// @ts-ignore
-const List = ({ navigation }) => {
-  return (
-    <View style={styles.listContainer}>
-      <Button title="Ver detalles película 1" onPress={() => navigation.navigate('MovieDetails', { movieId: 1 })} />
-      <Button title="Ver detalles película 2" onPress={() => navigation.navigate('MovieDetails', { movieId: 2 })} />
-    </View>
-  );
-};
+//Services
+import { getMoviesNoPrompt } from '../../../services/getMoviesServices';
+import { refreshToken } from '../../../services/refreshTokenService';
+
+//Components
+import MovieList from '../../components/movie_components/MovieList';
+
+//Interfaces
+import Movie from '../../../interfaces/Movie';
+import UserInfo from '../../../interfaces/UserInfo';
+
+//Redux
+import useUserInfo from '../../../hooks/useUserInfo';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../redux/slices/userSlice';
 
 // @ts-ignore
 const HomeScreen = ({ navigation }) => {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const refreshedUserInfo = await refreshToken(userInfo?.id);
+      dispatch(setUser(refreshedUserInfo));
+      setUserInfo(refreshedUserInfo);
+      const fetchedMovies = await getMoviesNoPrompt(userInfo);
+      setMovies(fetchedMovies);
+      console.log(movies)
+    }
+  }, [movies])
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Esta es la pantalla Home</Text>
-      <List navigation={navigation} />
+      <MovieList movies={movies} searchInput=''/>
     </View>
   );
 };

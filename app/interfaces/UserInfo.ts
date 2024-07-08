@@ -19,5 +19,6 @@ export default interface UserInfo {
     accountNonLocked: boolean, 
     credentialsNonExpired: boolean
     id: number
+    refreshToken: string;
 }
 

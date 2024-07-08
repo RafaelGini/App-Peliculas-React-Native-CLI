@@ -31,12 +31,12 @@ const LoginScreen = ({ navigation }) => {
 
   const signIn = async () => {
     try {
-
       await GoogleSignin.hasPlayServices();
       const googleUserInfo: User = await GoogleSignin.signIn();
       const userInfoResponse: UserInfo = await login(mapToGoogleUserInfo(googleUserInfo))
       console.log("Inicio de sesion exitoso: ", 
-        userInfoResponse.id, userInfoResponse.email, userInfoResponse.token);
+        userInfoResponse
+      );
       dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');
     } catch (error) {
