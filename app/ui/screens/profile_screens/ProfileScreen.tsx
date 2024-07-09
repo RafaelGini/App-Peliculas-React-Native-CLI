@@ -159,11 +159,8 @@ const ProfileScreen: React.FC = () => {
     );
   }
 
-  if (isUploading) {
-    return loadingScreen() 
-  }
-
   return (
+    isUploading ? loadingScreen() : 
     <UI_ProfileScreen
       t={t}
       image={image}
