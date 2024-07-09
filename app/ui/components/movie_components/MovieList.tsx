@@ -1,20 +1,22 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { FlatList, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Movie from '../../../interfaces/Movie';
 import MovieItem from './MovieItem';
 import theme from '../../styles/theme';
 import initialDataScreen from '../../../utils/initialDataScreen';
 import noDataScreen from '../../../utils/noDataScreen';
 import loadingScreen from '../../../utils/loadingScreen';
+import TimeoutScreen from '../../../utils/TimeOutScreen';
 import { useNavigation } from '@react-navigation/native';
 
 interface MovieListProps {
   movies: Movie[],
   searchInput: string,
   isLoading: boolean,
+  isTimeout: boolean,
 }
 
-const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading }) => {
+const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading, isTimeout }) => {
   const navigation = useNavigation();
 
   const handleMoviePress = (movieId: number) => {
@@ -24,6 +26,10 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading })
   
   if (isLoading) {
     return loadingScreen();
+  }
+
+  if (isTimeout) {
+    return TimeoutScreen();
   }
 
   if (searchInput === '') {

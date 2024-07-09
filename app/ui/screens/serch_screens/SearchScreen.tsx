@@ -1,26 +1,25 @@
-//React
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-//Services
+// Services
 import { getMovies } from '../../../services/searchMovies';
 import { refreshToken } from '../../../services/refreshTokenService';
 
-//Interfaces
+// Interfaces
 import Movie from '../../../interfaces/Movie';
 import UserInfo from '../../../interfaces/UserInfo';
 
-//Components - UI
+// Components - UI
 import SearchScreenUI from './UI_searchScreen';
 
-//Styles
+// Styles
 import theme from '../../styles/theme';
 
-//Conection
+// Connection
 import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
 
-//Reduxs
+// Redux
 import useUserInfo from '../../../hooks/useUserInfo';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
@@ -35,10 +34,25 @@ const SearchScreen = () => {
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isTimeout, setIsTimeout] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
-  //Busqueda
+  const fetchMoviesWithTimeout = async (input: string, user: UserInfo | null, timeout = 20000): Promise<Movie[]> => {
+    return new Promise<Movie[]>((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('timeout')), timeout);
+      getMovies(input, user)
+        .then((movies) => {
+          clearTimeout(timer);
+          resolve(movies);
+        })
+        .catch((error) => {
+          clearTimeout(timer);
+          reject(error);
+        });
+    });
+  };
+
   useEffect(() => {
     if (timer) {
       clearTimeout(timer);
@@ -46,12 +60,20 @@ const SearchScreen = () => {
     const newTimer = setTimeout(async () => {
       if (searchInput.trim().length > 0) {
         setIsLoading(true);
-        const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
-        console.log("Data del usuario refrescada", refreshedUserInfo);
-        dispatch(setUser(refreshedUserInfo));
-        setUserInfo(refreshedUserInfo);
-        const fetchedMovies = await getMovies(searchInput, userInfo);
-        setMovies(fetchedMovies);
+        setIsTimeout(false);
+        try {
+          const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
+          dispatch(setUser(refreshedUserInfo));
+          setUserInfo(refreshedUserInfo);
+          const fetchedMovies = await fetchMoviesWithTimeout(searchInput, refreshedUserInfo);
+          setMovies(fetchedMovies);
+        } catch (error) {
+          if (error instanceof Error && error.message === 'timeout') {
+            setIsTimeout(true);
+          } else {
+            console.error(error);
+          }
+        }
         setIsLoading(false);
       }
     }, 600);
@@ -64,7 +86,6 @@ const SearchScreen = () => {
     };
   }, [searchInput]);
 
-  //Sorter
   useEffect(() => {
     let sortedMovies = [...movies];
     if (filter === 'date') {
@@ -103,7 +124,7 @@ const SearchScreen = () => {
       <View style={styles.container}>
         {noInternetScreen()}
       </View>
-    )
+    );
   }
 
   return (
@@ -117,6 +138,7 @@ const SearchScreen = () => {
         currentFilter={filter}
         currentSorter={sorter}
         isLoading={isLoading}
+        isTimeout={isTimeout}
       />
     </View>
   );
@@ -126,7 +148,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 1,
-    backgroundColor: theme.colors.background
+    backgroundColor: theme.colors.background,
   },
 });
 

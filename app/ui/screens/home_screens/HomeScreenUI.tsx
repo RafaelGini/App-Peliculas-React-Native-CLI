@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 
 // Interfaces
 import Movie from '../../../interfaces/Movie';
@@ -36,6 +36,9 @@ const HomeScreenUI: React.FC<HomeScreenUIProps> = ({
 
   return (
     <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{t('NEWEST_MOVIES')}</Text>
+      </View>
       <View style={styles.filterContainer}>
         <FilterButton
           title={t('SORT_DATE_T')}
@@ -58,7 +61,7 @@ const HomeScreenUI: React.FC<HomeScreenUIProps> = ({
           onPress={toggleSorter}
         />
       </View>
-      <MovieList movies={movies} searchInput={'a'} isLoading={isLoading} />
+      <MovieList movies={movies} searchInput={'a'} isLoading={isLoading} isTimeout={false}/>
     </View>
   );
 };
@@ -69,6 +72,14 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     padding: 16,
     marginTop: 5,
+  },
+  titleContainer: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: theme.colors.text,
   },
   filterContainer: {
     flexDirection: 'row',

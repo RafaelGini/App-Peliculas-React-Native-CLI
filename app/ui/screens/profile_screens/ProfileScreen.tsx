@@ -52,7 +52,7 @@ const ProfileScreen: React.FC = () => {
       if (!userInfo) return;
       setUploading(true);
       try {
-        const refreshedUserInfo = await refreshToken(userInfo?.id);
+        const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
         dispatch(setUser(refreshedUserInfo));
         setUserInfo(refreshedUserInfo)
         const updatedUserInfo = await uploadImage(userInfo.id, imageUri, userInfo.token);
@@ -86,7 +86,7 @@ const ProfileScreen: React.FC = () => {
   const handleSaveChanges = async () => {
     if (!userInfo) return;
     try {
-      const refreshedUserInfo = await refreshToken(userInfo?.id);
+      const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
       dispatch(setUser(refreshedUserInfo));
       setUserInfo(refreshedUserInfo)
       const updatedUserInfo = await updateUser(userInfo.id, { nickname }, userInfo.token);
@@ -190,6 +190,7 @@ const emptyUserInfo = (): UserInfo => {
     accountNonExpired: false,
     accountNonLocked: false,
     credentialsNonExpired: false,
+    refreshToken: '',
     id: 0,
   };
 };

@@ -1,18 +1,17 @@
-//React
 import React from 'react';
 import { FlatList, View, TextInput, StyleSheet, Text } from 'react-native';
 
-//Interfaces
+// Interfaces
 import Movie from '../../../interfaces/Movie';
 
-//Styles
+// Styles
 import theme from '../../styles/theme';
 
-//Component
+// Component
 import FilterButton from './FilterButton';
 import MovieList from '../../components/movie_components/MovieList';
 
-//Utils
+// Utils
 import { useTranslation } from 'react-i18next';
 
 interface SearchScreenUIProps {
@@ -24,6 +23,7 @@ interface SearchScreenUIProps {
   currentFilter: 'date' | 'rating' | 'default';
   currentSorter: 'asc' | 'desc',
   isLoading: boolean,
+  isTimeout: boolean,
 }
 
 const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
@@ -34,10 +34,11 @@ const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
   toggleSorter,
   currentFilter,
   currentSorter,
-  isLoading
+  isLoading,
+  isTimeout,
 }) => {
   
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -71,7 +72,7 @@ const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
           onPress={toggleSorter}
         />
       </View>
-      <MovieList movies={movies} searchInput={searchInput} isLoading={isLoading} />
+      <MovieList movies={movies} searchInput={searchInput} isLoading={isLoading} isTimeout={isTimeout} />
     </View>
   );
 };
