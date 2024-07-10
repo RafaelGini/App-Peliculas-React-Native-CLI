@@ -18,6 +18,7 @@ import { setUser } from '../../../redux/slices/userSlice';
 //Handle Conecion
 import checkConnection from '../../../utils/checkConnection';
 import noInternetScreen from '../../../utils/noInternetScreen';
+import loadingScreen from '../../../utils/loadingScreen';
 
 //File handle
 import { launchImageLibrary, ImagePickerResponse, MediaType } from 'react-native-image-picker';
@@ -35,7 +36,7 @@ const ProfileScreen: React.FC = () => {
   const { t } = useTranslation();
   const [nickname, setNickname] = useState<string>(userInfo?.nickname || '');
   const [image, setImage] = useState<string>(userInfo?.profileImage || '');
-  const [uploading, setUploading] = useState<boolean>(false);
+  const [isUploading, setUploading] = useState<boolean>(false);
   
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -85,6 +86,7 @@ const ProfileScreen: React.FC = () => {
 
   const handleSaveChanges = async () => {
     if (!userInfo) return;
+    setUploading(true);
     try {
       const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
       dispatch(setUser(refreshedUserInfo));
@@ -93,6 +95,8 @@ const ProfileScreen: React.FC = () => {
       console.log('Usuario actualizado', updatedUserInfo);
     } catch (error) {
       console.error('Error updating user:', error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -156,6 +160,7 @@ const ProfileScreen: React.FC = () => {
   }
 
   return (
+    isUploading ? loadingScreen() : 
     <UI_ProfileScreen
       t={t}
       image={image}
