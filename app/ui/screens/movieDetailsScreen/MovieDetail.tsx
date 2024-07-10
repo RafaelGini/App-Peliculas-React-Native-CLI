@@ -1,6 +1,6 @@
 // MovieDetail.tsx
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Modal, Text } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/theme';
@@ -10,6 +10,7 @@ import { getMovieDetail } from '../../../services/getMovieDetailsService';
 import loadingScreen from '../../../utils/loadingScreen';
 import NoDetailsScreen from '../../../utils/noDetailScreen';
 import { addFavorite, removeFavorite } from '../../../services/favoritesServices';
+import { rateMovie } from '../../../services/ratingService';
 
 // Redux
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -18,6 +19,7 @@ import { setUser } from '../../../redux/slices/userSlice';
 import UserInfo from '../../../interfaces/UserInfo';
 import MovieDetails from '../../../interfaces/MovieDetails';
 import { refreshToken } from '../../../services/refreshTokenService';
+import RatingModal from './RatingModal';
 
 interface RouteParams {
     movieId: string;
@@ -31,6 +33,9 @@ const MovieDetail: React.FC = () => {
     const [movie, setMovie] = useState<MovieDetails | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
+
+    const [isModalVisible, setModalVisible] = useState<boolean>(false); // Estado para la visibilidad del modal
+    const [rating, setRating] = useState<number>(0); // Estado para la calificación
 
     useEffect(() => {
         const fetchMovieDetail = async () => {
@@ -72,6 +77,22 @@ const MovieDetail: React.FC = () => {
         }
     };
 
+    const handleRatingPress = () => {
+        setModalVisible(true);
+    };
+
+    const handleRatingSubmit = async (selectedRating: number) => {
+        if (userInfo && movie) {
+            const success = await rateMovie(movie.id, userInfo.id, selectedRating, userInfo);
+            if (success) {
+                console.log('Calificación enviada con éxito');
+            } else {
+                console.error('Error enviando la calificación');
+            }
+        }
+        setModalVisible(false);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -79,7 +100,14 @@ const MovieDetail: React.FC = () => {
                     <Icon name="heart" size={24} color={movie.favourite ? 'red' : 'gray'} />
                 </TouchableOpacity>
             </View>
-            <MovieDetailUI movie={movie} />
+            <MovieDetailUI movie={movie} onRatingPress={handleRatingPress} />
+            <RatingModal
+                isVisible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+                onSubmit={handleRatingSubmit}
+                rating={rating}
+                setRating={setRating}
+            />
         </View>
     );
 };

@@ -1,4 +1,3 @@
-// services/movieService.ts
 import axios from 'axios';
 import MovieDetails from '../interfaces/MovieDetails';
 import UserInfo from '../interfaces/UserInfo';

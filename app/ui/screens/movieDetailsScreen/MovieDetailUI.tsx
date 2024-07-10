@@ -1,3 +1,4 @@
+// MovieDetailUI.tsx
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Share } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -6,9 +7,10 @@ import theme from '../../styles/theme';
 
 interface MovieDetailUIProps {
   movie: MovieDetails;
+  onRatingPress: () => void; // Nueva prop
 }
 
-const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie }) => {
+const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) => {
   
   const handleShare = async () => {
     try {
@@ -39,7 +41,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie }) => {
         <Text style={styles.rating}>
           <Icon name="star-outline" size={16} /> {movie.vote_average} ({movie.vote_count})
         </Text>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onRatingPress}>
           <Text style={styles.buttonText}>Calificar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
