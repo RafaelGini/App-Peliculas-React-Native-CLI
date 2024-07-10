@@ -1,7 +1,7 @@
-// MovieDetailUI.tsx
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Share } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Share, ScrollView, FlatList, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import YoutubePlayer from "react-native-youtube-iframe";
 import MovieDetails from '../../../interfaces/MovieDetails';
 import theme from '../../styles/theme';
 
@@ -11,7 +11,11 @@ interface MovieDetailUIProps {
 }
 
 const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) => {
-  
+  const [isImageModalVisible, setImageModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [paused, setPaused] = useState(true);
+  const [playing, setPlaying] = useState(false);
+
   const handleShare = async () => {
     try {
       await Share.share({
@@ -22,8 +26,17 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
     }
   };
 
+  const handleImagePress = (imageUri: string) => {
+    setSelectedImage(imageUri);
+    setImageModalVisible(true);
+  };
+
+  const handleVideoPress = () => {
+    setPaused(!paused);
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: movie.poster_path }} style={styles.poster} />
       <Text style={styles.title}>{movie.title}</Text>
       <View style={styles.detailsContainer}>
@@ -48,16 +61,77 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
           <Icon name="share-social-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>
-    </View>
+
+      {/* Sección Trama */}
+      <Text style={styles.sectionTitle}>Trama</Text>
+      <Text style={styles.overview}>{movie.overview}</Text>
+
+      {/* Sección Director */}
+      <Text style={styles.sectionTitle}>Director</Text>
+      <View style={styles.directorContainer}>
+        <Image source={{ uri: movie.director_path }} style={styles.profileImage} />
+        <Text style={styles.castName}>{movie.director}</Text>
+        <Text style={styles.castRole}>Director</Text>
+      </View>
+
+      {/* Sección Elenco */}
+      <Text style={styles.sectionTitle}>Elenco</Text>
+      <View style={styles.castContainer}>
+        {movie.cast.map((member) => (
+          <View key={member.name} style={styles.castMember}>
+            <Image source={{ uri: member.profile_path }} style={styles.profileImage} />
+            <Text style={styles.castName}>{member.name}</Text>
+            <Text style={styles.castRole}>Actores</Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Sección Tráiler */}
+      <Text style={styles.sectionTitle}>Tráiler</Text>
+      <View style={{ marginVertical: 20 }}>
+          <YoutubePlayer
+            height={300}
+            play={true}
+            videoId={movie.trailer.split('v=')[1]}
+          />
+        </View>
+
+      {/* Sección Galería */}
+      <Text style={styles.sectionTitle}>Galería</Text>
+      <FlatList
+        data={movie.images}
+        horizontal
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleImagePress(item)}>
+            <Image source={{ uri: item }} style={styles.galleryImage} />
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      {/* Modal para la imagen seleccionada */}
+      <Modal
+        visible={isImageModalVisible}
+        transparent={true}
+        onRequestClose={() => setImageModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity onPress={() => setImageModalVisible(false)}>
+            <Icon name="close-circle-outline" size={36} color="white" />
+          </TouchableOpacity>
+          {selectedImage && <Image source={{ uri: selectedImage }} style={styles.modalImage} />}
+        </View>
+      </Modal>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     padding: 16,
-    backgroundColor: theme.colors.background
+    backgroundColor: theme.colors.background,
   },
   poster: {
     width: 200,
@@ -77,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '100%',
     marginBottom: 8,
-    backgroundColor: theme.colors.background
+    backgroundColor: theme.colors.background,
   },
   detailText: {
     fontSize: 16,
@@ -102,11 +176,77 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   buttonText: {
-    color: theme.colors.secondary,  
-    fontWeight: 'bold'
+    color: theme.colors.secondary,
+    fontWeight: 'bold',
   },
   shareButton: {
     marginLeft: 8,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    alignSelf: 'flex-start',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  overview: {
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'justify',
+    marginBottom: 16,
+  },
+  directorContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  castContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  castMember: {
+    alignItems: 'center',
+    marginHorizontal: 8,
+    marginBottom: 16,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 4,
+  },
+  castName: {
+    fontSize: 14,
+    color: 'white',
+    textAlign: 'center',
+  },
+  castRole: {
+    fontSize: 12,
+    color: 'gray',
+    textAlign: 'center',
+  },
+  video: {
+    width: '100%',
+    height: 200,
+    marginBottom: 16,
+  },
+  galleryImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: '90%',
+    height: '70%',
+    resizeMode: 'contain',
   },
 });
 

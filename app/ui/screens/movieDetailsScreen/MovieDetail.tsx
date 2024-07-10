@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Modal, Text } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/theme';
+import Toast from 'react-native-toast-message';
 
 import MovieDetailUI from './MovieDetailUI';
 import { getMovieDetail } from '../../../services/getMovieDetailsService';
@@ -24,7 +25,7 @@ import RatingModal from './RatingModal';
 interface RouteParams {
     movieId: string;
 }
- 
+
 const MovieDetail: React.FC = () => {
     const dispatch = useDispatch();
     const route = useRoute();
@@ -34,8 +35,8 @@ const MovieDetail: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
 
-    const [isModalVisible, setModalVisible] = useState<boolean>(false); // Estado para la visibilidad del modal
-    const [rating, setRating] = useState<number>(0); // Estado para la calificación
+    const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [rating, setRating] = useState<number>(0);
 
     useEffect(() => {
         const fetchMovieDetail = async () => {
@@ -85,9 +86,17 @@ const MovieDetail: React.FC = () => {
         if (userInfo && movie) {
             const success = await rateMovie(movie.id, userInfo.id, selectedRating, userInfo);
             if (success) {
-                console.log('Calificación enviada con éxito');
+                Toast.show({
+                    type: 'success',
+                    text1: 'Calificación enviada',
+                    text2: 'Tu calificación ha sido enviada con éxito.'
+                });
             } else {
-                console.error('Error enviando la calificación');
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: 'Hubo un error al enviar tu calificación.'
+                });
             }
         }
         setModalVisible(false);
