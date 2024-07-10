@@ -26,7 +26,7 @@ const TrailerVideo: React.FC<Props> = ({ videoId }) => {
         height={screenWidth * (9 / 16)}
         width={screenWidth - 40}  // Reducing width to add margin
         videoId={videoId}
-        play={true}
+        play={false}
         webViewProps={{
           allowsInlineMediaPlayback: true,
         }}

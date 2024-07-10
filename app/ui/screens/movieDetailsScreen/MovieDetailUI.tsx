@@ -14,7 +14,6 @@ interface MovieDetailUIProps {
 const extractVideoId = (url: string): string | null => {
   const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
   const matches = url.match(regex);
-  console.log("MATCHES", matches ? matches[1] : null)
   return matches ? matches[1] : null;
 };
 
@@ -76,26 +75,6 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
       <Text style={styles.sectionTitle}>Trama</Text>
       <Text style={styles.overview}>{movie.overview}</Text>
 
-      {/* Sección Director */}
-      <Text style={styles.sectionTitle}>Director</Text>
-      <View style={styles.directorContainer}>
-        <Image source={{ uri: movie.director_path }} style={styles.profileImage} />
-        <Text style={styles.castName}>{movie.director}</Text>
-        <Text style={styles.castRole}>Director</Text>
-      </View>
-
-      {/* Sección Elenco */}
-      <Text style={styles.sectionTitle}>Elenco</Text>
-      <View style={styles.castContainer}>
-        {movie.cast.map((member) => (
-          <View key={member.name} style={styles.castMember}>
-            <Image source={{ uri: member.profile_path }} style={styles.profileImage} />
-            <Text style={styles.castName}>{member.name}</Text>
-            <Text style={styles.castRole}>Actores</Text>
-          </View>
-        ))}
-      </View>
-
       {/* Sección Tráiler */}
       <Text style={styles.sectionTitle}>Tráiler</Text>
       {videoId ? <TrailerVideo videoId={videoId} /> : <Text>No hay tráiler disponible</Text>}
@@ -126,6 +105,26 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
           {selectedImage && <Image source={{ uri: selectedImage }} style={styles.modalImage} />}
         </View>
       </Modal>
+
+      {/* Sección Director */}
+      <Text style={styles.sectionTitle}>Director</Text>
+      <View style={styles.directorContainer}>
+        <Image source={{ uri: movie.director_path }} style={styles.profileImage} />
+        <Text style={styles.castName}>{movie.director}</Text>
+        <Text style={styles.castRole}>Director</Text>
+      </View>
+
+      {/* Sección Elenco */}
+      <Text style={styles.sectionTitle}>Elenco</Text>
+      <View style={styles.castContainer}>
+        {movie.cast.map((member) => (
+          <View key={member.name} style={styles.castMember}>
+            <Image source={{ uri: member.profile_path }} style={styles.profileImage} />
+            <Text style={styles.castName}>{member.name}</Text>
+            <Text style={styles.castRole}>Actores</Text>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 };
