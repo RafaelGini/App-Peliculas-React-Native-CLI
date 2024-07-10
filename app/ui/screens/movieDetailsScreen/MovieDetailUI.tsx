@@ -4,11 +4,19 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import YoutubePlayer from "react-native-youtube-iframe";
 import MovieDetails from '../../../interfaces/MovieDetails';
 import theme from '../../styles/theme';
+import  TrailerVideo  from './TrailerVideo';
 
 interface MovieDetailUIProps {
   movie: MovieDetails;
   onRatingPress: () => void; // Nueva prop
 }
+
+const extractVideoId = (url: string): string | null => {
+  const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const matches = url.match(regex);
+  console.log("MATCHES", matches ? matches[1] : null)
+  return matches ? matches[1] : null;
+};
 
 const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) => {
   const [isImageModalVisible, setImageModalVisible] = useState(false);
@@ -34,6 +42,8 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
   const handleVideoPress = () => {
     setPaused(!paused);
   };
+
+  const videoId = extractVideoId(movie.trailer);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -88,13 +98,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
 
       {/* Sección Tráiler */}
       <Text style={styles.sectionTitle}>Tráiler</Text>
-      <View style={{ marginVertical: 20 }}>
-          <YoutubePlayer
-            height={300}
-            play={true}
-            videoId={movie.trailer.split('v=')[1]}
-          />
-        </View>
+      {videoId ? <TrailerVideo videoId={videoId} /> : <Text>No hay tráiler disponible</Text>}
 
       {/* Sección Galería */}
       <Text style={styles.sectionTitle}>Galería</Text>
