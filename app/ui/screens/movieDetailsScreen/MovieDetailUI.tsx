@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Share, ScrollView, FlatList, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import YoutubePlayer from "react-native-youtube-iframe";
 import MovieDetails from '../../../interfaces/MovieDetails';
 import theme from '../../styles/theme';
 import  TrailerVideo  from './TrailerVideo';
@@ -42,7 +41,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
     setPaused(!paused);
   };
 
-  const videoId = extractVideoId(movie.trailer);
+  const videoId = !movie.trailer ? null : extractVideoId(movie.trailer);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -77,7 +76,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
 
       {/* Sección Tráiler */}
       <Text style={styles.sectionTitle}>Tráiler</Text>
-      {videoId ? <TrailerVideo videoId={videoId} /> : <Text>No hay tráiler disponible</Text>}
+      {videoId ? <TrailerVideo videoId={videoId} /> : <Text style={styles.sectionTitle}>No hay tráiler disponible</Text>}
 
       {/* Sección Galería */}
       <Text style={styles.sectionTitle}>Galería</Text>

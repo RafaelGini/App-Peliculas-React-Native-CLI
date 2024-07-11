@@ -12,7 +12,7 @@ import theme from '../../styles/theme';
 import MovieList from '../../components/movie_components/MovieList';
 
 // Utils
-import noDataScreen from '../../../utils/noDataScreen';
+import EmptyFavoritesScreen from '../../../utils/EmptyFavoritesScreen';
 
 interface FavoritesScreenUIProps {
   favoriteMovies: Movie[];
@@ -21,7 +21,7 @@ interface FavoritesScreenUIProps {
 
 const FavoritesScreenUI: React.FC<FavoritesScreenUIProps> = ({ favoriteMovies, isLoading }) => {
   if (favoriteMovies.length === 0) {
-    return noDataScreen(); 
+    return EmptyFavoritesScreen(); 
   }
 
   return (

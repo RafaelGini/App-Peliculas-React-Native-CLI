@@ -102,6 +102,8 @@ const MovieDetail: React.FC = () => {
         setModalVisible(false);
     };
 
+
+    console.log(movie)
     return (
         <View style={styles.container}>
             <View style={styles.header}>

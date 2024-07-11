@@ -24,7 +24,7 @@ const TrailerVideo: React.FC<Props> = ({ videoId }) => {
       {isVideoLoading && <ActivityIndicator style={styles.spinner} color="#FF0000" />}
       <YoutubePlayer
         height={screenWidth * (9 / 16)}
-        width={screenWidth - 40}  // Reducing width to add margin
+        width={screenWidth - 40} 
         videoId={videoId}
         play={false}
         webViewProps={{

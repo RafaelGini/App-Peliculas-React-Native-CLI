@@ -1,6 +1,6 @@
 // React
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 // Interfaces
 import Movie from '../../../interfaces/Movie';
@@ -9,7 +9,6 @@ import Movie from '../../../interfaces/Movie';
 import theme from '../../styles/theme';
 
 // Components
-import FilterButton from '../serch_screens/FilterButton';
 import MovieList from '../../components/movie_components/MovieList';
 
 // Utils
@@ -17,20 +16,18 @@ import { useTranslation } from 'react-i18next';
 
 interface HomeScreenUIProps {
   movies: Movie[];
-  handleFilter: (filter: 'date' | 'rating' | 'default') => void;
-  toggleSorter: () => void;
-  currentFilter: 'date' | 'rating' | 'default';
-  currentSorter: 'asc' | 'desc';
   isLoading: boolean;
+  genres: string[];
+  selectedGenre: string;
+  handleGenreSelect: (genre: string) => void;
 }
 
 const HomeScreenUI: React.FC<HomeScreenUIProps> = ({
   movies,
-  handleFilter,
-  toggleSorter,
-  currentFilter,
-  currentSorter,
-  isLoading
+  isLoading,
+  genres,
+  selectedGenre,
+  handleGenreSelect
 }) => {
   const { t } = useTranslation();
 
@@ -39,29 +36,28 @@ const HomeScreenUI: React.FC<HomeScreenUIProps> = ({
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{t('NEWEST_MOVIES')}</Text>
       </View>
-      <View style={styles.filterContainer}>
-        <FilterButton
-          title={t('SORT_DATE_T')}
-          isActive={currentFilter === 'date'}
-          onPress={() => handleFilter('date')}
-        />
-        <FilterButton
-          title={t('SORT_RATE_T')}
-          isActive={currentFilter === 'rating'}
-          onPress={() => handleFilter('rating')}
-        />
-        <FilterButton
-          title={t('SORT_DEFAULT_T')}
-          isActive={currentFilter === 'default'}
-          onPress={() => handleFilter('default')}
-        />
-        <FilterButton
-          title={currentSorter === 'asc' ? t('SORT_ASCENDING') : t('SORT_DESCENDING')}
-          isActive={true}
-          onPress={toggleSorter}
-        />
-      </View>
-      <MovieList movies={movies} searchInput={'a'} isLoading={isLoading} isTimeout={false}/>
+      <FlatList
+        data={genres}
+        horizontal
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={[styles.genreButton, item === selectedGenre && styles.genreButtonSelected]}
+            onPress={() => handleGenreSelect(item)}
+          >
+            <Text style={styles.genreButtonText}>{item}</Text>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.genreList}
+      />
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size={'large'} color={theme.colors.primary} />
+        </View>
+      ) : (
+        <MovieList movies={movies} searchInput={'a'} isLoading={false} isTimeout={false} />
+      )}
     </View>
   );
 };
@@ -81,10 +77,35 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.text,
   },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+  genreList: {
+
+  },
+  genreButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 5,
+    backgroundColor: theme.colors.background,
+    marginHorizontal: 5,
+    minWidth: 100,
+    maxWidth: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
+  },
+  genreButtonText: {
+    color: theme.colors.text,
+    fontSize: 14,
+    textAlign: 'center',
+    flexWrap: 'wrap',
+  },
+  genreButtonSelected: {
+    backgroundColor: theme.colors.background_soft,
+    color: theme.colors.primary
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

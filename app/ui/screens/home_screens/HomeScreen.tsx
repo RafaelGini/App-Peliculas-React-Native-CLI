@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 // Services
-import { getLatestMovies } from '../../../services/latestMoviesService'; // Cambis películas más nuevas
+import { getLatestMovies } from '../../../services/latestMoviesService';
+import { getMoviesByGenre } from '../../../services/latestMoviesByGenre';
 import { refreshToken } from '../../../services/refreshTokenService';
 
 // Interfaces
 import Movie from '../../../interfaces/Movie';
 import UserInfo from '../../../interfaces/UserInfo';
+import mainGenres from './genres';
 
 // Components - UI
 import HomeScreenUI from './HomeScreenUI';
@@ -27,15 +29,14 @@ import { setUser } from '../../../redux/slices/userSlice';
 
 const HomeScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [filter, setFilter] = useState<'date' | 'rating' | 'default'>('default');
-  const [sorter, setSorter] = useState<'asc' | 'desc'>('desc');
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [genres, setGenres] = useState<string[]>(mainGenres);
+  const [selectedGenre, setSelectedGenre] = useState<string>('Todo');
 
   const dispatch = useDispatch();
 
-  // Fetch a las mas nuevas
   useEffect(() => {
     const fetchMovies = async () => {
       setIsLoading(true);
@@ -51,38 +52,19 @@ const HomeScreen = () => {
     fetchMovies();
   }, []);
 
-  // Sorter
   useEffect(() => {
-    let sortedMovies = [...movies];
-    if (filter === 'date') {
-      sortedMovies.sort((a, b) => {
-        if (sorter === 'asc') {
-          return new Date(a.release_date).getTime() - new Date(b.release_date).getTime();
-        } else {
-          return new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
-        }
-      });
-    } else if (filter === 'rating') {
-      sortedMovies.sort((a, b) => {
-        if (sorter === 'asc') {
-          return a.vote_average - b.vote_average;
-        } else {
-          return b.vote_average - a.vote_average;
-        }
-      });
-    }
-    setMovieList(sortedMovies);
-  }, [movies, filter, sorter]);
+    setMovieList(movies);
+  }, [movies]);
 
-  const handleFilter = (selectedFilter: 'date' | 'rating' | 'default') => {
-    setFilter(selectedFilter);
-    if (selectedFilter === 'default') {
-      setSorter('desc');
-    }
-  };
-
-  const toggleSorter = () => {
-    setSorter(sorter === 'asc' ? 'desc' : 'asc');
+  const handleGenreSelect = async (genre: string) => {
+    setSelectedGenre(genre);
+    setIsLoading(true);
+    const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
+    dispatch(setUser(refreshedUserInfo));
+    setUserInfo(refreshedUserInfo);
+    const fetchedMovies = genre === 'Todo' ? await getLatestMovies(userInfo) : await getMoviesByGenre(userInfo, genre);
+    setMovies(fetchedMovies);
+    setIsLoading(false);
   };
 
   if (checkConnection() === false) {
@@ -97,11 +79,10 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <HomeScreenUI
         movies={movieList}
-        handleFilter={handleFilter}
-        toggleSorter={toggleSorter}
-        currentFilter={filter}
-        currentSorter={sorter}
         isLoading={isLoading}
+        genres={genres}
+        selectedGenre={selectedGenre}
+        handleGenreSelect={handleGenreSelect}
       />
     </View>
   );
