@@ -11,6 +11,8 @@
       "INITIAL_DATA_SEARCH": "Use search bar to find a movie!",
       "NO_DATA_SEARCH": "Sorry! We could not find your search...", 
       "NO_DATA_HELP": "Search by movie name or cast...", 
+      "NO_FAV_DATA": "There are no favorites yet...", 
+      "NO_FAV_HELP": "Here you will find the movies you saved as favorites", 
       "NO_INTERNET": "Ups! No internet connection",
       "RETRY_CONNECTION": "Please, review your connections and try again later",
       "LABEL_NICKNAME": "Nickname",
