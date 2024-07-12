@@ -23,6 +23,7 @@
 
       "ERROR_RATE_SENT": "Error while sending rate",
       "ERROR_RATE_SENT_INFO": "Please try again later or restart the application...",
+      "ERROR_LOGIN_GOOGLE": "Error during Log In with Google. Please try again later or restart the application...",
 
       "INITIAL_DATA_SEARCH": "Use search bar to find a movie!",
 
