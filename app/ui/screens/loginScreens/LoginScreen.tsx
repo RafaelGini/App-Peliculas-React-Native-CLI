@@ -1,52 +1,72 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, Alert, ActivityIndicator } from 'react-native';
 import { GoogleSignin, GoogleSigninButton, User } from '@react-native-community/google-signin';
 import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setUser } from '../../../redux/slices/userSlice';
 import { useTranslation } from 'react-i18next';
 import theme from '../../styles/theme';
 import { login } from '../../../services/loginAPIService';
 import UserInfo from '../../../interfaces/UserInfo';
-import loadingScreen from '../../../utils/loadingScreen';
+import GoogleUserInfo from '../../../interfaces/GoogleUserInfo';
 
 GoogleSignin.configure({
   webClientId: '339637593763-19rqqksc5a7u595uiu4gl1pcer0qd383.apps.googleusercontent.com',
-  offlineAccess: true
+  offlineAccess: true,
 });
 
 //@ts-ignore
 const LoginScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      setIsLoading(true);
+      try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          const userInfoResponse = JSON.parse(storedUser);
+          dispatch(setUser(userInfoResponse));
+          navigation.replace('HomeTabs');
+        }
+      } catch (error) {
+        console.log('Error al recuperar los datos del usuario:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkUserLoggedIn();
+  }, [dispatch, navigation]);
 
   const signIn = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       await GoogleSignin.hasPlayServices();
-      const googleUserInfo: User = await GoogleSignin.signIn();
-      const userInfoResponse: UserInfo = await login(mapToGoogleUserInfo(googleUserInfo))
-      console.log("Inicio de sesión exitoso: ", userInfoResponse);
+      const user: User = await GoogleSignin.signIn();
+      const googleUserInfo: GoogleUserInfo = mapToGoogleUserInfo(user);
+      const userInfoResponse: UserInfo = await login(googleUserInfo);
+      await AsyncStorage.setItem('user', JSON.stringify(userInfoResponse));
       dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');
     } catch (error) {
       Alert.alert(
         'Error al iniciar sesión',
         `Ocurrió un problema al intentar iniciar sesión: ${error}`,
-        [
-          { text: 'OK', onPress: () => console.log('OK Pressed') }
-        ],
-        { cancelable: false }
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        { cancelable: false },
       );
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
       {isLoading ? (
-        loadingScreen() // Mostrar el spinner de carga mientras isLoading sea true
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       ) : (
         <>
           <Image source={require('../../../assets/images/MovieFinder_logo.png')} style={styles.logo} />
@@ -69,9 +89,9 @@ const mapToGoogleUserInfo = (userInfo: User) => {
     name: userInfo.user.name,
     surname: userInfo.user.familyName,
     email: userInfo.user.email,
-    nickname: "",
+    nickname: '',
     profileImage: userInfo.user.photo,
-    googleId: userInfo.user.id
+    googleId: userInfo.user.id,
   };
 };
 

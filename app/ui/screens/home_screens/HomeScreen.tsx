@@ -18,9 +18,6 @@ import HomeScreenUI from './HomeScreenUI';
 // Styles
 import theme from '../../styles/theme';
 
-// Connection
-import checkConnection from '../../../utils/checkConnection';
-import noInternetScreen from '../../../utils/noInternetScreen';
 
 // Redux
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -66,14 +63,6 @@ const HomeScreen = () => {
     setMovies(fetchedMovies);
     setIsLoading(false);
   };
-
-  if (checkConnection() === false) {
-    return (
-      <View style={styles.container}>
-        {noInternetScreen()}
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>

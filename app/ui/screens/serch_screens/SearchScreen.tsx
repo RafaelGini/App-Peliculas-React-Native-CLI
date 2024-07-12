@@ -15,10 +15,6 @@ import SearchScreenUI from './UI_searchScreen';
 // Styles
 import theme from '../../styles/theme';
 
-// Connection
-import checkConnection from '../../../utils/checkConnection';
-import noInternetScreen from '../../../utils/noInternetScreen';
-
 // Redux
 import useUserInfo from '../../../hooks/useUserInfo';
 import { useDispatch } from 'react-redux';
@@ -118,14 +114,6 @@ const SearchScreen = () => {
   const toggleSorter = () => {
     setSorter(sorter === 'asc' ? 'desc' : 'asc');
   };
-
-  if (checkConnection() === false) {
-    return (
-      <View style={styles.container}>
-        {noInternetScreen()}
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>

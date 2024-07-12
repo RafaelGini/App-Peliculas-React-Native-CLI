@@ -1,43 +1,28 @@
-//React - Navigation
 import React, { useState } from 'react';
 import { View, Alert, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-//Services
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
 import { uploadImage } from '../../../services/uploadImageService';
 import { refreshToken } from '../../../services/refreshTokenService';
 import { updateUser } from '../../../services/updateUserService';
 import { logoutUser } from '../../../services/logOutUserService';
 import { deleteAccount } from '../../../services/deleteUserService';
-
-//Redux
 import useUserInfo from '../../../hooks/useUserInfo';
-import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
-
-//Handle Conecion
-import checkConnection from '../../../utils/checkConnection';
-import noInternetScreen from '../../../utils/noInternetScreen';
 import loadingScreen from '../../../utils/loadingScreen';
-
-//File handle
 import { launchImageLibrary, ImagePickerResponse, MediaType } from 'react-native-image-picker';
-//Utils
 import { useTranslation } from 'react-i18next';
-//Components
 import UI_ProfileScreen from './UI_ProfileScreen';
-//Styling
 import theme from '../../styles/theme';
-//Interfaces
 import UserInfo from '../../../interfaces/UserInfo';
 
 const ProfileScreen: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo())
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
   const { t } = useTranslation();
   const [nickname, setNickname] = useState<string>(userInfo?.nickname || '');
   const [image, setImage] = useState<string>(userInfo?.profileImage || '');
   const [isUploading, setUploading] = useState<boolean>(false);
-  
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -53,13 +38,12 @@ const ProfileScreen: React.FC = () => {
       if (!userInfo) return;
       setUploading(true);
       try {
-        const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
+        const refreshedUserInfo = await refreshToken(userInfo.token, userInfo.refreshToken);
         dispatch(setUser(refreshedUserInfo));
-        setUserInfo(refreshedUserInfo)
+        setUserInfo(refreshedUserInfo);
         const updatedUserInfo = await uploadImage(userInfo.id, imageUri, userInfo.token);
         setImage(updatedUserInfo.profileImage);
         setNickname(updatedUserInfo.nickname);
-        console.log('Imagen actualizada', updatedUserInfo);
         dispatch(setUser(updatedUserInfo));
       } catch (error) {
         console.error('Error uploading image', error);
@@ -81,16 +65,15 @@ const ProfileScreen: React.FC = () => {
         }
       }
     });
-    console.log('Cambiar foto');
   };
 
   const handleSaveChanges = async () => {
     if (!userInfo) return;
     setUploading(true);
     try {
-      const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
+      const refreshedUserInfo = await refreshToken(userInfo.token, userInfo.refreshToken);
       dispatch(setUser(refreshedUserInfo));
-      setUserInfo(refreshedUserInfo)
+      setUserInfo(refreshedUserInfo);
       const updatedUserInfo = await updateUser(userInfo.id, { nickname }, userInfo.token);
       console.log('Usuario actualizado', updatedUserInfo);
     } catch (error) {
@@ -103,7 +86,9 @@ const ProfileScreen: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logoutUser(userInfo?.id, userInfo?.token);
-      // @ts-ignore
+      await AsyncStorage.removeItem('user');
+      dispatch(setUser(emptyUserInfo()));
+      //@ts-ignore
       navigation.replace('Login');
     } catch (error) {
       console.error('Error logging out:', error);
@@ -113,13 +98,13 @@ const ProfileScreen: React.FC = () => {
 
   const handleDeleteAccount = async () => {
     if (!userInfo) return;
-
     try {
       await deleteAccount(userInfo.id, userInfo.token);
-      dispatch(setUser(emptyUserInfo())); 
-      // @ts-ignore
-      navigation.replace('Login'); 
-      console.log("CUENTA ELIMINADA")
+      await AsyncStorage.removeItem('user');
+      dispatch(setUser(emptyUserInfo()));
+      //@ts-ignore
+      navigation.replace('Login');
+      console.log('CUENTA ELIMINADA');
     } catch (error) {
       console.error('Error deleting account:', error);
       Alert.alert('Error', 'Hubo un problema al intentar eliminar la cuenta. Inténtalo de nuevo más tarde.');
@@ -143,14 +128,6 @@ const ProfileScreen: React.FC = () => {
       { text: t('ALERT_CONTINUE'), onPress: handleDeleteAccount },
     ], { cancelable: true });
 
-  if (checkConnection() === false) {
-    return (
-      <View style={styles.container}>
-        {noInternetScreen()}
-      </View>
-    );
-  }
-
   if (!userInfo) {
     return (
       <View style={styles.container}>
@@ -160,7 +137,7 @@ const ProfileScreen: React.FC = () => {
   }
 
   return (
-    isUploading ? loadingScreen() : 
+    isUploading ? loadingScreen() :
     <UI_ProfileScreen
       t={t}
       image={image}
@@ -199,8 +176,6 @@ const emptyUserInfo = (): UserInfo => {
     id: 0,
   };
 };
-
-
 
 const styles = StyleSheet.create({
   container: {

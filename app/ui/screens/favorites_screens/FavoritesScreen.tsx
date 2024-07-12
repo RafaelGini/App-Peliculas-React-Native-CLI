@@ -24,8 +24,6 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
 
 // Connection
-import checkConnection from '../../../utils/checkConnection';
-import noInternetScreen from '../../../utils/noInternetScreen';
 
 const FavoritesScreen = () => {
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
@@ -54,14 +52,6 @@ const FavoritesScreen = () => {
     }, [])
   );
 
-  if (checkConnection() === false) {
-    return (
-      <View style={styles.container}>
-        {noInternetScreen()}
-      </View>
-    );
-  }
-  
   if (isLoading) {
     return loadingScreen();
   }
