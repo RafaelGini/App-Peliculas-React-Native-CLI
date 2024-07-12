@@ -1,5 +1,5 @@
 const mainGenres = [
-    "Todo",
+    "All",
     "Action",
     "Adventure",
     "Animation",

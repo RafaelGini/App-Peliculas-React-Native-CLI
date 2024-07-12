@@ -1,30 +1,63 @@
 {
     "translation": {
-      "LOGIN_GOOGLE": "Sign in with your Google account",
-      "PLACEHOLDER_SEARCH": "Search movies...",
-      "PLACEHOLDER_NICKNAME": "*Please complete your nickname*",
-      "SORT_DATE_T": "Date",
-      "SORT_RATE_T": "Rating",
-      "SORT_DEFAULT_T": "Default",
-      "SORT_ASCENDING": "Ascending",
-      "SORT_DESCENDING": "Descending",
+      "ALERT_CANCEL": "Cancel",      
+      "ALERT_CONTINUE": "Continue",
+      "ALERT_DELETE_TEXT": "This action can not be reversed and you will lose all your configuration and favorites",
+      "ALERT_DELETE_TITLE": "Are your sure you want to delete your account?",
+      "ALERT_LOGOUT_TEXT": "Your account will be deactivated and you will need to Log In again",
+      "ALERT_LOGOUT_TITLE": "Are your sure you want to log out?",
+
+      "BUTTON_CHANGE_PIC": "Change profile picture",
+      "BUTTON_DELETE_ACCOUNT": "Delete account",
+      "BUTTON_LOGOUT": "Logout",
+      "BUTTON_SAVE_CHANGES": "Save changes",
+
+      "DET_SCR_MINUTES": "Minutes",
+      "DET_SCR_RATE": "Rate",
+      "DET_SCR_OVERVIEW": "Overview",
+      "DET_SCR_TRAILER": "Trailer",
+      "DET_SCR_PHOTO_GAL": "Photo gallery",
+      "DET_SCR_DIRECTOR": "Director",
+      "DET_SCR_CAST": "Cast",
+      "DET_SCR_ACTOR": "Actor",
+
+      "ERROR_RATE_SENT": "Error while sending rate",
+      "ERROR_RATE_SENT_INFO": "Please try again later or restart the application...",
+
       "INITIAL_DATA_SEARCH": "Use search bar to find a movie!",
-      "NO_DATA_SEARCH": "Sorry! We could not find your search...", 
-      "NO_DATA_HELP": "Search by movie name or cast...", 
-      "NO_INTERNET": "Ups! No internet connection",
-      "RETRY_CONNECTION": "Please, review your connections and try again later",
-      "LABEL_NICKNAME": "Nickname",
+
       "LABEL_NAME": "Full name",
       "LABEL_EMAIL": "Email",
-      "BUTTON_CHANGE_PIC": "Change profile picture",
-      "BUTTON_SAVE_CHANGES": "Save changes",
-      "BUTTON_LOGOUT": "Logout",
-      "BUTTON_DELETE_ACCOUNT": "Delete account",
-      "ALERT_LOGOUT_TITLE": "Are your sure you want to log out?",
-      "ALERT_LOGOUT_TEXT": "Your account will be deactivated and you will need to Log In again",
-      "ALERT_DELETE_TITLE": "Are your sure you want to delete your account?",
-      "ALERT_DELETE_TEXT": "This action can not be reversed and you will lose all your configuration and favorites",
-      "ALERT_CANCEL": "Cancel",      
-      "ALERT_CONTINUE": "Continue"      
+      "LOGIN_GOOGLE": "Sign in with your Google account",
+      "LABEL_NICKNAME": "Nickname",
+
+      "NEWEST_MOVIES": "Featuring today",
+      "NO_CONNECTION": "Ups! Something went wrong...", 
+      "NO_CONNECTION_HELP": "Please review your connection or restart the application...", 
+      "NO_DATA_HELP": "Search by movie name or cast...", 
+      "NO_DATA_SEARCH": "Sorry! We could not find your search...", 
+      "NO_DETAILS_FOUND": "Sorry! We could not find the details for this movie...", 
+      "NO_DETAILS_HELP": "Please try restarting the application or trying again later...", 
+      "NO_INTERNET": "Ups! No internet connection",
+      "NO_FAVORITE_MOVIES": "Looks like you haven't selected any favorites movies yet!",
+      "ADD_FAVORITE_MOVIES_PROMPT": "You will see the movies you add from Home and Search screens here",
+      
+      "PLACEHOLDER_NICKNAME": "*Please complete your nickname*",
+      "PLACEHOLDER_SEARCH": "Search movies...",
+
+      "RATE_ALERT": "Select your rate for this movie!",
+      "RATE_ALERT_INFO": "1 (one) is the lowest and 5 (five) is the highest",
+      "RATE_SENT": "Your rate has been sent",
+      "RATE_SENT_INFO": "Please be aware that ratings can be updated after some time",
+      "RETRY_CONNECTION": "Please, review your connections and try again later",
+
+      "SORT_ASCENDING": "Ascending",
+      "SORT_DATE_T": "Date",
+      "SORT_DEFAULT_T": "Default",
+      "SORT_DESCENDING": "Descending",
+      "SORT_RATE_T": "Rating",
+
+      "TIMEOUT_MESSAGE": "Sorry! Time out has been reached",
+      "TIMEOUT_HELP": "Sorry! Please review your connections and try again later"
    }
   }

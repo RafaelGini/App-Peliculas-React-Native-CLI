@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MovieDetails from '../../../interfaces/MovieDetails';
 import theme from '../../styles/theme';
 import  TrailerVideo  from './TrailerVideo';
+import noImage from '../../../assets/images/user-icon.png';
+import { useTranslation } from 'react-i18next';
 
 interface MovieDetailUIProps {
   movie: MovieDetails;
@@ -21,11 +23,12 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [paused, setPaused] = useState(true);
   const [playing, setPlaying] = useState(false);
+  const { t } = useTranslation();
 
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Mira esta película: ${movie.title}`,
+        message: `Look at this movie: ${movie.title}`,
       });
     } catch (error) {
       console.error('Error sharing:', error);
@@ -52,7 +55,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
           <Icon name="calendar-outline" size={16} /> {new Date(movie.release_date).getFullYear()}
         </Text>
         <Text style={styles.detailText}>
-          <Icon name="time-outline" size={16} /> {movie.runtime} Minutos
+          <Icon name="time-outline" size={16} /> {movie.runtime} {t('DET_SCR_MINUTES')} 
         </Text>
         <Text style={styles.detailText}>
           <Icon name="film-outline" size={16} /> {movie.genres[0]}
@@ -63,7 +66,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
           <Icon name="star-outline" size={16} /> {movie.vote_average} ({movie.vote_count})
         </Text>
         <TouchableOpacity style={styles.button} onPress={onRatingPress}>
-          <Text style={styles.buttonText}>Calificar</Text>
+          <Text style={styles.buttonText}>{t('DET_SCR_RATE')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
           <Icon name="share-social-outline" size={24} color="white" />
@@ -71,15 +74,15 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
       </View>
 
       {/* Sección Trama */}
-      <Text style={styles.sectionTitle}>Trama</Text>
+      <Text style={styles.sectionTitle}>{t('DET_SCR_OVERVIEW')}</Text>
       <Text style={styles.overview}>{movie.overview}</Text>
 
       {/* Sección Tráiler */}
-      <Text style={styles.sectionTitle}>Tráiler</Text>
-      {videoId ? <TrailerVideo videoId={videoId} /> : <Text style={styles.sectionTitle}>No hay tráiler disponible</Text>}
+      <Text style={styles.sectionTitle}>{t('DET_SCR_TRAILER')}</Text>
+      {videoId ? <TrailerVideo videoId={videoId} /> : <Text style={styles.detailText}>No hay tráiler disponible</Text>}
 
       {/* Sección Galería */}
-      <Text style={styles.sectionTitle}>Galería</Text>
+      <Text style={styles.sectionTitle}>{t('DET_SCR_PHOTO_GAL')}</Text>
       <FlatList
         data={movie.images}
         horizontal
@@ -106,21 +109,21 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
       </Modal>
 
       {/* Sección Director */}
-      <Text style={styles.sectionTitle}>Director</Text>
+      <Text style={styles.sectionTitle}>{t('DET_SCR_DIRECTOR')}</Text>
       <View style={styles.directorContainer}>
-        <Image source={{ uri: movie.director_path }} style={styles.profileImage} />
+        <Image source={movie.director_path ? { uri: movie.director_path } : { uri: Image.resolveAssetSource(noImage).uri}} style={styles.profileImage} />
         <Text style={styles.castName}>{movie.director}</Text>
-        <Text style={styles.castRole}>Director</Text>
+        <Text style={styles.castRole}>{t('DET_SCR_DIRECTOR')}</Text>
       </View>
 
       {/* Sección Elenco */}
-      <Text style={styles.sectionTitle}>Elenco</Text>
+      <Text style={styles.sectionTitle}>{t('DET_SCR_CAST')}</Text>
       <View style={styles.castContainer}>
         {movie.cast.map((member) => (
           <View key={member.name} style={styles.castMember}>
-            <Image source={{ uri: member.profile_path }} style={styles.profileImage} />
+            <Image source={member.profile_path ? { uri: member.profile_path } : { uri: Image.resolveAssetSource(noImage).uri} } style={styles.profileImage} />
             <Text style={styles.castName}>{member.name}</Text>
-            <Text style={styles.castRole}>Actores</Text>
+            <Text style={styles.castRole}>{t('DET_SCR_ACTOR')}</Text>
           </View>
         ))}
       </View>

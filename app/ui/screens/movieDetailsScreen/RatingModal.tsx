@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/theme';
+import { useTranslation } from 'react-i18next';
 
 interface RatingModalProps {
     isVisible: boolean;
@@ -13,6 +14,7 @@ interface RatingModalProps {
 }
 
 const RatingModal: React.FC<RatingModalProps> = ({ isVisible, onClose, onSubmit, rating, setRating }) => {
+    const { t } = useTranslation();
     return (
         <Modal
             transparent={true}
@@ -22,7 +24,7 @@ const RatingModal: React.FC<RatingModalProps> = ({ isVisible, onClose, onSubmit,
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.title}>Seleccione que tanto le gustó este título</Text>
+                    <Text style={styles.title}>{t('RATE_ALERT')}</Text>
                     <View style={styles.starsContainer}>
                         {[1, 2, 3, 4, 5].map((star) => (
                             <TouchableOpacity key={star} onPress={() => setRating(star)}>
@@ -34,13 +36,13 @@ const RatingModal: React.FC<RatingModalProps> = ({ isVisible, onClose, onSubmit,
                             </TouchableOpacity>
                         ))}
                     </View>
-                    <Text style={styles.subtitle}>Donde 1 estrella es muy mala y 5 estrellas excelente.</Text>
+                    <Text style={styles.subtitle}>{t('RATE_ALERT_INFO')}</Text>
                     <View style={styles.buttonsContainer}>
                         <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-                            <Text style={styles.buttonText}>Cancelar</Text>
+                            <Text style={styles.buttonText}>{t('ALERT_CANCEL')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.submitButton} onPress={() => onSubmit(rating)}>
-                            <Text style={styles.buttonText}>Calificar</Text>
+                            <Text style={styles.buttonText}>{t('DET_SCR_RATE')}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -30,7 +30,7 @@ const HomeScreen = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [genres, setGenres] = useState<string[]>(mainGenres);
-  const [selectedGenre, setSelectedGenre] = useState<string>('Todo');
+  const [selectedGenre, setSelectedGenre] = useState<string>('All');
 
   const dispatch = useDispatch();
 
@@ -59,7 +59,7 @@ const HomeScreen = () => {
     const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
     dispatch(setUser(refreshedUserInfo));
     setUserInfo(refreshedUserInfo);
-    const fetchedMovies = genre === 'Todo' ? await getLatestMovies(userInfo) : await getMoviesByGenre(userInfo, genre);
+    const fetchedMovies = genre === 'All' ? await getLatestMovies(userInfo) : await getMoviesByGenre(userInfo, genre);
     setMovies(fetchedMovies);
     setIsLoading(false);
   };

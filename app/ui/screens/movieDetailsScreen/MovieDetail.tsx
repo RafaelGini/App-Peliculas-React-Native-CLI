@@ -5,6 +5,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import theme from '../../styles/theme';
 import Toast from 'react-native-toast-message';
+import { useTranslation } from 'react-i18next';
 
 import MovieDetailUI from './MovieDetailUI';
 import { getMovieDetail } from '../../../services/getMovieDetailsService';
@@ -27,6 +28,7 @@ interface RouteParams {
 }
 
 const MovieDetail: React.FC = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const route = useRoute();
     const { movieId } = route.params as RouteParams;
@@ -88,14 +90,14 @@ const MovieDetail: React.FC = () => {
             if (success) {
                 Toast.show({
                     type: 'success',
-                    text1: 'Calificación enviada',
-                    text2: 'Tu calificación ha sido enviada con éxito.'
+                    text1: t('RATE_SENT'),//'Calificación enviada',
+                    text2: t('RATE_SENT_INFO')//'Tu calificación ha sido enviada con éxito.'
                 });
             } else {
                 Toast.show({
                     type: 'error',
-                    text1: 'Error',
-                    text2: 'Hubo un error al enviar tu calificación.'
+                    text1: t('ERROR_RATE_SENT'),//'Error',
+                    text2: t('ERROR_RATE_SENT_INFO'),//'Hubo un error al enviar tu calificación.'
                 });
             }
         }

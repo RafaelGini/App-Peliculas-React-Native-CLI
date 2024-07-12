@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     padding: 16,
-    marginTop: 5,
+    //marginTop: 5,
   },
   titleContainer: {
-    marginBottom: 16,
+    marginBottom: 10,
   },
   title: {
     fontSize: 20,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   genreList: {
-
+    paddingBottom: 15,
   },
   genreButton: {
     paddingHorizontal: 20,
