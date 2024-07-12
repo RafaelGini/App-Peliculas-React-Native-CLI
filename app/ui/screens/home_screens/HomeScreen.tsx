@@ -41,7 +41,7 @@ const HomeScreen = () => {
       console.log("Data del usuario refrescada");
       dispatch(setUser(refreshedUserInfo));
       setUserInfo(refreshedUserInfo);
-      const fetchedMovies = await getLatestMovies(refreshedUserInfo);
+      const fetchedMovies = await getLatestMovies(refreshedUserInfo, 1);
       setMovies(fetchedMovies);
       setIsLoading(false);
     };
@@ -59,7 +59,7 @@ const HomeScreen = () => {
     const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
     dispatch(setUser(refreshedUserInfo));
     setUserInfo(refreshedUserInfo);
-    const fetchedMovies = genre === 'All' ? await getLatestMovies(userInfo) : await getMoviesByGenre(userInfo, genre);
+    const fetchedMovies = genre === 'All' ? await getLatestMovies(userInfo, 1) : await getMoviesByGenre(userInfo, genre, 1);
     setMovies(fetchedMovies);
     setIsLoading(false);
   };

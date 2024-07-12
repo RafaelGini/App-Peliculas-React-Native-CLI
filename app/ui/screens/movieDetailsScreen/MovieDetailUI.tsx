@@ -4,7 +4,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MovieDetails from '../../../interfaces/MovieDetails';
 import theme from '../../styles/theme';
 import  TrailerVideo  from './TrailerVideo';
-import noImage from '../../../assets/images/user-icon.png';
+//@ts-ignore
+import noImage from '../../../assets/images/noImage.png'
 import { useTranslation } from 'react-i18next';
 
 interface MovieDetailUIProps {
@@ -45,6 +46,8 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
   };
 
   const videoId = !movie.trailer ? null : extractVideoId(movie.trailer);
+
+  console.log(movie.director_path)
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -111,7 +114,8 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
       {/* Sección Director */}
       <Text style={styles.sectionTitle}>{t('DET_SCR_DIRECTOR')}</Text>
       <View style={styles.directorContainer}>
-        <Image source={movie.director_path ? { uri: movie.director_path } : { uri: Image.resolveAssetSource(noImage).uri}} style={styles.profileImage} />
+        {/*@ts-ignore*/}
+        <Image source={movie.director_path ? { uri: movie.director_path } : { noImage }} style={styles.profileImage} />
         <Text style={styles.castName}>{movie.director}</Text>
         <Text style={styles.castRole}>{t('DET_SCR_DIRECTOR')}</Text>
       </View>

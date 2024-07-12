@@ -5,11 +5,12 @@ import UserInfo from '../interfaces/UserInfo';
 const BASE_URL = 'https://movie-finder-api.azurewebsites.net/movieFinder';
 const searchEndPoint = '/movies';
 
-async function getMoviesByGenre(userInfo: UserInfo | null, genre: string): Promise<Movie[]> { 
+async function getMoviesByGenre(userInfo: UserInfo | null, genre: string, page: number): Promise<Movie[]> { 
     try {
       const response = await axios.get(`${BASE_URL}${searchEndPoint}`, {
         params: {
             genre: genre,
+            page: page
           },
           headers: {
           Authorization: `Bearer ${userInfo?.token}`
