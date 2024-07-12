@@ -54,9 +54,6 @@ const LoginScreen = ({ navigation }) => {
     } catch (error) {
       Alert.alert(
         t('ERROR_LOGIN_GOOGLE'), `${error}`,
-        //t('ERROR_LOGIN_GOOGLE_HELP'),
-        //'Error al iniciar sesión',
-        //`Ocurrió un problema al intentar iniciar sesión: ${error}`,
         [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
         { cancelable: false },
       );
