@@ -1,33 +1,32 @@
-// React
 import React from 'react';
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-
-// Interfaces
 import Movie from '../../../interfaces/Movie';
-
-// Styles
 import theme from '../../styles/theme';
-
-// Components
 import MovieList from '../../components/movie_components/MovieList';
-
-// Utils
 import { useTranslation } from 'react-i18next';
+import MovieItem from '../../components/movie_components/MovieItem';
+
 
 interface HomeScreenUIProps {
   movies: Movie[];
   isLoading: boolean;
+  isFetchingMore: boolean;
   genres: string[];
   selectedGenre: string;
   handleGenreSelect: (genre: string) => void;
+  loadMoreMovies: () => void;
+  handleMoviePress: (movie: Movie) => void;
 }
 
 const HomeScreenUI: React.FC<HomeScreenUIProps> = ({
   movies,
   isLoading,
+  isFetchingMore,
   genres,
   selectedGenre,
-  handleGenreSelect
+  handleGenreSelect,
+  loadMoreMovies,
+  handleMoviePress
 }) => {
   const { t } = useTranslation();
 
@@ -56,7 +55,20 @@ const HomeScreenUI: React.FC<HomeScreenUIProps> = ({
           <ActivityIndicator size={'large'} color={theme.colors.primary} />
         </View>
       ) : (
-        <MovieList movies={movies} searchInput={'a'} isLoading={false} isTimeout={false} />
+        <FlatList
+          data={movies}
+          renderItem={({ item }) => <MovieItem movie={item} onPress={() => handleMoviePress(item)}/>}
+          keyExtractor={(item) => item.id.toString()}
+          onEndReached={loadMoreMovies}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isFetchingMore ? (
+              <View style={styles.loadingMoreContainer}>
+                <ActivityIndicator size={'small'} color={theme.colors.primary} />
+              </View>
+            ) : null
+          }
+        />
       )}
     </View>
   );
@@ -67,7 +79,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     padding: 16,
-    //marginTop: 5,
   },
   titleContainer: {
     marginBottom: 10,
@@ -104,6 +115,11 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingMoreContainer: {
+    padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
