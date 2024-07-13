@@ -9,6 +9,8 @@ import SearchScreen from '../../screens/serch_screens/SearchScreen';
 import FavoritesScreen from '../../screens/favorites_screens/FavoritesScreen';
 import ProfileScreen from '../../screens/profile_screens/ProfileScreen';
 
+import MoviesList2 from '../movie_components/MoviesList';
+
 //Styling
 import theme from '../../styles/theme';
 
@@ -55,7 +57,8 @@ function HomeTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      {/*<Tab.Screen name="Search" component={SearchScreen} />*/}
+      <Tab.Screen name="Search" component={MoviesList2} />
       <Tab.Screen name="Favorites" component={FavoritesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
