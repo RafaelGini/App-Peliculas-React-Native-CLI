@@ -5,11 +5,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Screens y componentes
 import HomeScreen from '../../screens/home_screens/HomeScreen';
-import SearchScreen from '../../screens/serch_screens/SearchScreen';
+import SearchScreen2 from '../../screens/serch_screens/SearchScreen';
 import FavoritesScreen from '../../screens/favorites_screens/FavoritesScreen';
 import ProfileScreen from '../../screens/profile_screens/ProfileScreen';
 
 import MoviesList2 from '../movie_components/MoviesList';
+
+import SearchScreen from '../../screens/serch_screens/SearchScreen2';
 
 //Styling
 import theme from '../../styles/theme';
@@ -46,19 +48,19 @@ function HomeTabs() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.grey,
         tabBarStyle: {
-          backgroundColor: theme.colors.background, 
-          height: 80,  
-          paddingBottom: 10,  
-          paddingTop: 10,  
+          backgroundColor: theme.colors.background,
+          height: 80,
+          paddingBottom: 10,
+          paddingTop: 10,
         },
         tabBarLabelStyle: {
-          fontSize: 15, 
+          fontSize: 15,
         },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      {/*<Tab.Screen name="Search" component={SearchScreen} />*/}
-      <Tab.Screen name="Search" component={MoviesList2} />
+      <Tab.Screen name="Search" component={SearchScreen} />
+      {/*<Tab.Screen name="Search" component={SearchScreen2} />*/}
       <Tab.Screen name="Favorites" component={FavoritesScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

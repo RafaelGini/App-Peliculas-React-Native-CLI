@@ -45,8 +45,8 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading, i
       data={movies}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => handleMoviePress(item.id)}>
-          <MovieItem movie={item} />
+        <TouchableOpacity>
+          <MovieItem movie={item} onPress={() => handleMoviePress(item.id)} />
         </TouchableOpacity>
       )}
       contentContainerStyle={styles.list}

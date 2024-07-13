@@ -27,7 +27,8 @@ const LoginScreen = ({ navigation }) => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
         if (storedUser) {
-          const userInfoResponse = JSON.parse(storedUser);
+          const googleUserInfo = JSON.parse(storedUser);
+          const userInfoResponse: UserInfo = await login(googleUserInfo);
           dispatch(setUser(userInfoResponse));
           navigation.replace('HomeTabs');
         }
@@ -47,8 +48,8 @@ const LoginScreen = ({ navigation }) => {
       await GoogleSignin.hasPlayServices();
       const user: User = await GoogleSignin.signIn();
       const googleUserInfo: GoogleUserInfo = mapToGoogleUserInfo(user);
+      await AsyncStorage.setItem('user', JSON.stringify(googleUserInfo));
       const userInfoResponse: UserInfo = await login(googleUserInfo);
-      await AsyncStorage.setItem('user', JSON.stringify(userInfoResponse));
       dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');
     } catch (error) {
