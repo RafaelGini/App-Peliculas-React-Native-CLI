@@ -26,6 +26,7 @@ const SearchScreen = () => {
       <TextInput
         style={styles.searchBar}
         placeholder="Search for movies..."
+        placeholderTextColor="#ffffff" // Cambiar color del placeholder a blanco
         onChangeText={handleSearch}
         value={searchQuery}
       />
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
-    color: "white"
+    color: "white" // Cambiar el color del texto a blanco
   },
 });
 
