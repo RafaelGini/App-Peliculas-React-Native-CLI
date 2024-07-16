@@ -13,15 +13,17 @@ import MovieList from '../../components/movie_components/MovieList';
 
 // Utils
 import EmptyFavoritesScreen from '../../../utils/EmptyFavoritesScreen';
+import { UseTranslationResponse } from 'react-i18next';
 
 interface FavoritesScreenUIProps {
+  translate: Function;
   favoriteMovies: Movie[];
   isLoading: boolean;
 }
 
-const FavoritesScreenUI: React.FC<FavoritesScreenUIProps> = ({ favoriteMovies, isLoading }) => {
+const FavoritesScreenUI: React.FC<FavoritesScreenUIProps> = ({ translate, favoriteMovies, isLoading }) => {
   if (favoriteMovies.length === 0) {
-    return EmptyFavoritesScreen(); 
+    return EmptyFavoritesScreen(translate); 
   }
 
   return (

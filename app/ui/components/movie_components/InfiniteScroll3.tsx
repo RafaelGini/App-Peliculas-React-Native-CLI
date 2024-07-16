@@ -7,6 +7,7 @@ import MovieItem from './MovieItem';
 import { useNavigation } from '@react-navigation/native';
 import initialDataScreen from '../../../utils/initialDataScreen';
 import noDataScreen from '../../../utils/noDataScreen';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   searchQuery: string;
@@ -22,6 +23,7 @@ const InfiniteScrollList3: React.FC<Props> = ({ searchQuery, userInfo, sortBy, o
   const [hasMoreData, setHasMoreData] = useState<boolean>(true);
   const [noResults, setNoResults] = useState<boolean>(false);
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   useEffect(() => {
     const resetAndLoadData = async () => {
@@ -87,11 +89,11 @@ const InfiniteScrollList3: React.FC<Props> = ({ searchQuery, userInfo, sortBy, o
   };
 
   if (!searchQuery) {
-    return initialDataScreen();
+    return initialDataScreen(t);
   }
 
   if (noResults) {
-    return noDataScreen();
+    return noDataScreen(t);
   }
 
   return (

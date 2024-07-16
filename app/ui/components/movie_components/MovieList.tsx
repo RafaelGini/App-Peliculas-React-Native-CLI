@@ -14,9 +14,10 @@ interface MovieListProps {
   searchInput: string,
   isLoading: boolean,
   isTimeout: boolean,
+  translate: Function,
 }
 
-const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading, isTimeout }) => {
+const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading, isTimeout, translate }) => {
   const navigation = useNavigation();
 
   const handleMoviePress = (movieId: number) => {
@@ -29,15 +30,15 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchInput, isLoading, i
   }
 
   if (isTimeout) {
-    return TimeoutScreen();
+    return TimeoutScreen(translate);
   }
 
   if (searchInput === '') {
-    return initialDataScreen();
+    return initialDataScreen(translate);
   }
 
   if (movies.length === 0 && searchInput !== '') {
-    return noDataScreen();
+    return noDataScreen(translate);
   }
 
   return (

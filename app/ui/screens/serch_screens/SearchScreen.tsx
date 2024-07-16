@@ -19,8 +19,10 @@ import theme from '../../styles/theme';
 import useUserInfo from '../../../hooks/useUserInfo';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
+import { useTranslation } from 'react-i18next';
 
 const SearchScreen = () => {
+  const { t } = useTranslation();
   
   const [searchInput, setSearchInput] = useState<string>('');
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -118,6 +120,7 @@ const SearchScreen = () => {
   return (
     <View style={styles.container}>
       <SearchScreenUI
+        translate={t}
         movies={movieList}
         searchInput={searchInput}
         setSearchInput={setSearchInput}

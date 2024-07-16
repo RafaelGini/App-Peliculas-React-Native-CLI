@@ -23,6 +23,8 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../redux/slices/userSlice';
 
+import { useTranslation } from 'react-i18next';
+
 // Connection
 
 const FavoritesScreen = () => {
@@ -30,6 +32,7 @@ const FavoritesScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(useUserInfo());
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -59,6 +62,7 @@ const FavoritesScreen = () => {
   return (
     <View style={styles.container}>
       <FavoritesScreenUI
+        translate={t}
         favoriteMovies={favoriteMovies}
         isLoading={false}
       />

@@ -15,6 +15,7 @@ import MovieList from '../../components/movie_components/MovieList';
 import { useTranslation } from 'react-i18next';
 
 interface SearchScreenUIProps {
+  translate: Function;
   movies: Movie[];
   searchInput: string;
   setSearchInput: React.Dispatch<React.SetStateAction<string>>;
@@ -27,6 +28,7 @@ interface SearchScreenUIProps {
 }
 
 const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
+  translate,
   movies,
   searchInput,
   setSearchInput,
@@ -38,13 +40,13 @@ const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
   isTimeout,
 }) => {
   
-  const { t } = useTranslation();
+  //const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.textInput}
-        placeholder={t('PLACEHOLDER_SEARCH')}
+        placeholder={translate('PLACEHOLDER_SEARCH')}
         placeholderTextColor={theme.colors.text_light}
         value={searchInput}
         onChangeText={setSearchInput}
@@ -52,27 +54,27 @@ const SearchScreenUI: React.FC<SearchScreenUIProps> = ({
 
       <View style={styles.filterContainer}>
         <FilterButton
-          title={t('SORT_DATE_T')}
+          title={translate('SORT_DATE_T')}
           isActive={currentFilter === 'date'}
           onPress={() => handleFilter('date')}
         />
         <FilterButton
-          title={t('SORT_RATE_T')}
+          title={translate('SORT_RATE_T')}
           isActive={currentFilter === 'rating'}
           onPress={() => handleFilter('rating')}
         />
         <FilterButton
-          title={t('SORT_DEFAULT_T')}
+          title={translate('SORT_DEFAULT_T')}
           isActive={currentFilter === 'default'}
           onPress={() => handleFilter('default')}
         />
         <FilterButton
-          title={currentSorter === 'asc' ? t('SORT_ASCENDING') : t('SORT_DESCENDING')}
+          title={currentSorter === 'asc' ? translate('SORT_ASCENDING') : translate('SORT_DESCENDING')}
           isActive={true}
           onPress={toggleSorter}
         />
       </View>
-      <MovieList movies={movies} searchInput={searchInput} isLoading={isLoading} isTimeout={isTimeout} />
+      <MovieList movies={movies} searchInput={searchInput} isLoading={isLoading} isTimeout={isTimeout} translate={translate}/>
     </View>
   );
 };

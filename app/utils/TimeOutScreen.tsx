@@ -4,13 +4,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import theme from '../ui/styles/theme';
 import { useTranslation } from 'react-i18next';
 
-const TimeoutScreen = () => {
-  const { t } = useTranslation();
+const TimeoutScreen = (translate: Function) => {
+  //const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <Ionicons name="time-outline" style={styles.icon} size={80} color={theme.colors.primary} />
-      <Text style={styles.text}>{t('TIMEOUT_MESSAGE')}</Text>
-      <Text style={styles.subText}>{t('TIMEOUT_HELP')}</Text>
+      <Text style={styles.text}>{translate('TIMEOUT_MESSAGE')}</Text>
+      <Text style={styles.subText}>{translate('TIMEOUT_HELP')}</Text>
     </View>
   );
 };
