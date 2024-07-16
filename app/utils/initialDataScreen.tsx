@@ -5,11 +5,10 @@ import errorStyles from './errorStyles';
 import { useTranslation } from 'react-i18next';
 
 const initialDataScreen = () => {
-  const {t} = useTranslation();
   return(
     <View style={errorStyles.containerError}>
       <Ionicons name={"file-tray-outline"} style={errorStyles.iconError} size={80} color={theme.colors.primary} />
-      <Text style={errorStyles.errorText}>{t('INITIAL_DATA_SEARCH')}</Text>
+      <Text style={errorStyles.errorText}>{"Search Your Favorites Movies!"}</Text>
     </View>
   )
 }

@@ -1,17 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import MoviesList2 from '../../components/movie_components/MoviesList';
+import { useDispatch } from 'react-redux';
+import InfiniteScrollList3 from '../../components/movie_components/InfiniteScroll3';
+import useUserInfo from '../../../hooks/useUserInfo';
+import { refreshToken } from '../../../services/refreshTokenService';
+import { setUser } from '../../../redux/slices/userSlice';
 import theme from '../../styles/theme';
-import InfiniteScrollList from '../../components/movie_components/InfiniteScrollList';
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  
+  const dispatch = useDispatch();
+  const userInfo = useUserInfo();
+  const [localUserInfo, setLocalUserInfo] = useState(userInfo);
+
+  const fetchUserInfo = async () => {
+    if (localUserInfo?.token && localUserInfo?.refreshToken) {
+      const refreshedUserInfo = await refreshToken(localUserInfo.token, localUserInfo.refreshToken);
+      dispatch(setUser(refreshedUserInfo));
+      setLocalUserInfo(refreshedUserInfo);
+    }
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
+      fetchUserInfo();
       setDebouncedQuery(searchQuery);
-    }, 1000); 
+    }, 1000);
 
     return () => {
       clearTimeout(handler);
@@ -27,11 +43,11 @@ const SearchScreen = () => {
       <TextInput
         style={styles.searchBar}
         placeholder="Search for movies..."
-        placeholderTextColor="#ffffff" // Cambiar color del placeholder a blanco
+        placeholderTextColor="#ffffff" 
         onChangeText={handleSearch}
         value={searchQuery}
       />
-      <MoviesList2 searchQuery={debouncedQuery}/>
+      <InfiniteScrollList3 searchQuery={debouncedQuery} userInfo={localUserInfo} />
     </View>
   );
 };

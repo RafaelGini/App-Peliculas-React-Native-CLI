@@ -17,7 +17,6 @@ async function getMovies(userInput: string, userInfo: UserInfo | null, page: num
         }
       });
       const movies = response.data.movies;
-      console.log(movies);
       return movies ?? [];
     } catch (error) {
       return [];
