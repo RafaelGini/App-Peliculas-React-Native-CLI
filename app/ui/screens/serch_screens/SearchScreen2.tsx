@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import InfiniteScrollList3 from '../../components/movie_components/InfiniteScroll3';
+import FilterBar from '../../components/movie_components/FilterBar';
 import useUserInfo from '../../../hooks/useUserInfo';
 import { refreshToken } from '../../../services/refreshTokenService';
 import { setUser } from '../../../redux/slices/userSlice';
@@ -10,7 +11,9 @@ import theme from '../../styles/theme';
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  
+  const [sortBy, setSortBy] = useState('default');
+  const [order, setOrder] = useState('asc');
+
   const dispatch = useDispatch();
   const userInfo = useUserInfo();
   const [localUserInfo, setLocalUserInfo] = useState(userInfo);
@@ -43,11 +46,17 @@ const SearchScreen = () => {
       <TextInput
         style={styles.searchBar}
         placeholder="Search for movies..."
-        placeholderTextColor="#ffffff" 
+        placeholderTextColor="#ffffff"
         onChangeText={handleSearch}
         value={searchQuery}
       />
-      <InfiniteScrollList3 searchQuery={debouncedQuery} userInfo={localUserInfo} />
+      <FilterBar setSortBy={setSortBy} sortBy={sortBy} setOrder={setOrder} order={order} />
+      <InfiniteScrollList3
+        searchQuery={debouncedQuery}
+        userInfo={localUserInfo}
+        sortBy={sortBy}
+        order={order}
+      />
     </View>
   );
 };
@@ -56,7 +65,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: theme.colors.background
+    backgroundColor: theme.colors.background,
   },
   searchBar: {
     height: 40,
@@ -65,7 +74,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
-    color: "white"
+    color: 'white',
   },
 });
 
