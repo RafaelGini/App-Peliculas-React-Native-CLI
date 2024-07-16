@@ -10,6 +10,8 @@ import MovieItem from './MovieItem';
 import TimeoutScreen from '../../../utils/TimeOutScreen';
 import theme from '../../styles/theme';
 import { useNavigation } from '@react-navigation/native';
+import initialDataScreen from '../../../utils/initialDataScreen';
+import noDataScreen from '../../../utils/noDataScreen';
 
 interface MoviesList2Props {
   searchQuery: string;
@@ -22,7 +24,7 @@ const MoviesList2: React.FC<MoviesList2Props> = ({ searchQuery }) => {
   const [loading, setLoading] = useState(false);
   const [hasTimedOut, setHasTimedOut] = useState(false);
   const [sortBy, setSortBy] = useState<'default' | 'date' | 'rating'>('default');
-  const [isAscending, setIsAscending] = useState(true); // Estado para manejar el orden ascendente/descendente
+  const [isAscending, setIsAscending] = useState(true);
   const userInfo = useUserInfo();
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -38,12 +40,13 @@ const MoviesList2: React.FC<MoviesList2Props> = ({ searchQuery }) => {
     }, 30000);
 
     try {
+      console.log("QUERY: ", searchQuery, ", PAGE: ", page);
       const refreshedUserInfo = await refreshToken(userInfo?.token, userInfo?.refreshToken);
       dispatch(setUser(refreshedUserInfo));
       const newMovies = await getMovies(searchQuery, refreshedUserInfo, page);
       clearTimeout(timeoutId);
       setMovies((prevMovies) => (page === 1 ? newMovies : [...prevMovies, ...newMovies]));
-      setSortedMovies((prevMovies) => (page === 1 ? newMovies : [...prevMovies, ...newMovies])); // Initialize sortedMovies
+      setSortedMovies((prevMovies) => (page === 1 ? newMovies : [...prevMovies, ...newMovies]));
     } catch (error) {
       clearTimeout(timeoutId);
     }
@@ -53,16 +56,18 @@ const MoviesList2: React.FC<MoviesList2Props> = ({ searchQuery }) => {
 
   useEffect(() => {
     setPage(1);
+    console.log("CAMBIAMOS LA PAGE: ", page)
     setMovies([]);
   }, [searchQuery]);
 
   useEffect(() => {
     fetchMovies();
-  }, [page, searchQuery]);
+    console.log("HICIMOS FETCH CON LA PAGE: ", page)
+  }, [page, fetchMovies]);
 
   useEffect(() => {
     sortMovies(sortBy);
-  }, [movies, sortBy, isAscending]); // Añadimos isAscending a la lista de dependencias
+  }, [movies, sortBy, isAscending]);
 
   const handleLoadMore = () => {
     if (!loading) {
@@ -112,8 +117,6 @@ const MoviesList2: React.FC<MoviesList2Props> = ({ searchQuery }) => {
     return <TimeoutScreen />;
   }
 
-
-
   return (
     <View style={styles.container}>
       <View style={styles.filterBar}>
@@ -149,7 +152,7 @@ const MoviesList2: React.FC<MoviesList2Props> = ({ searchQuery }) => {
           keyExtractor={(item, index) => `${item.id}-${index}`}
           renderItem={({ item }) => <MovieItem movie={item} onPress={() => handleMoviePress(item)} />}
           onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.7}
           ListFooterComponent={renderFooter}
         />
       )}
