@@ -82,7 +82,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
 
       {/* Sección Tráiler */}
       <Text style={styles.sectionTitle}>{t('DET_SCR_TRAILER')}</Text>
-      {videoId ? <TrailerVideo videoId={videoId} /> : <Text style={styles.detailText}>No hay tráiler disponible</Text>}
+      {videoId ? <TrailerVideo videoId={videoId} /> : <Text style={styles.detailText}>{t('NO_TRAILER')}</Text>}
 
       {/* Sección Galería */}
       <Text style={styles.sectionTitle}>{t('DET_SCR_PHOTO_GAL')}</Text>
@@ -115,7 +115,7 @@ const MovieDetailUI: React.FC<MovieDetailUIProps> = ({ movie, onRatingPress }) =
       <Text style={styles.sectionTitle}>{t('DET_SCR_DIRECTOR')}</Text>
       <View style={styles.directorContainer}>
         {/*@ts-ignore*/}
-        <Image source={movie.director_path ? { uri: movie.director_path } : { noImage }} style={styles.profileImage} />
+        <Image source={movie.director_path ? { uri: movie.director_path } : { uri: Image.resolveAssetSource(noImage).uri }} style={styles.profileImage} />
         <Text style={styles.castName}>{movie.director}</Text>
         <Text style={styles.castRole}>{t('DET_SCR_DIRECTOR')}</Text>
       </View>
