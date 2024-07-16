@@ -41,6 +41,7 @@
       "NO_DETAILS_HELP": "Please try restarting the application or trying again later...", 
       "NO_INTERNET": "Ups! No internet connection",
       "NO_FAVORITE_MOVIES": "Looks like you haven't selected any favorites movies yet!",
+      "NO_TRAILER": "No trailer available",
       "ADD_FAVORITE_MOVIES_PROMPT": "You will see the movies you add from Home and Search screens here",
       
       "PLACEHOLDER_NICKNAME": "*Please complete your nickname*",
