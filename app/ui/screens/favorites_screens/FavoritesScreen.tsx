@@ -69,7 +69,6 @@ const FavoritesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
     backgroundColor: theme.colors.background,
   },
 });
