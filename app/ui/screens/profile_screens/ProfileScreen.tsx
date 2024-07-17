@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Alert, StyleSheet, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import { useDispatch } from 'react-redux';
 import { uploadImage } from '../../../services/uploadImageService';
 import { refreshToken } from '../../../services/refreshTokenService';
@@ -86,7 +86,7 @@ const ProfileScreen: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logoutUser(userInfo?.id, userInfo?.token);
-      await AsyncStorage.removeItem('user');
+      await EncryptedStorage.removeItem('user');
       dispatch(setUser(emptyUserInfo()));
       //@ts-ignore
       navigation.replace('Login');
@@ -100,7 +100,7 @@ const ProfileScreen: React.FC = () => {
     if (!userInfo) return;
     try {
       await deleteAccount(userInfo.id, userInfo.token);
-      await AsyncStorage.removeItem('user');
+      await EncryptedStorage.removeItem('user');
       dispatch(setUser(emptyUserInfo()));
       //@ts-ignore
       navigation.replace('Login');

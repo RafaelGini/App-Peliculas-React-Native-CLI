@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, ActivityIndicator } from 'react-native';
 import { GoogleSignin, GoogleSigninButton, User } from '@react-native-community/google-signin';
 import { useDispatch } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import { setUser } from '../../../redux/slices/userSlice';
 import { useTranslation } from 'react-i18next';
 import theme from '../../styles/theme';
@@ -25,7 +25,7 @@ const LoginScreen = ({ navigation }) => {
     const checkUserLoggedIn = async () => {
       setIsLoading(true);
       try {
-        const storedUser = await AsyncStorage.getItem('user');
+        const storedUser = await EncryptedStorage.getItem('user');
         if (storedUser) {
           const googleUserInfo = JSON.parse(storedUser);
           const userInfoResponse: UserInfo = await login(googleUserInfo);
@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
       await GoogleSignin.hasPlayServices();
       const user: User = await GoogleSignin.signIn();
       const googleUserInfo: GoogleUserInfo = mapToGoogleUserInfo(user);
-      await AsyncStorage.setItem('user', JSON.stringify(googleUserInfo));
+      await EncryptedStorage.setItem('user', JSON.stringify(googleUserInfo));
       const userInfoResponse: UserInfo = await login(googleUserInfo);
       dispatch(setUser(userInfoResponse));
       navigation.replace('HomeTabs');
