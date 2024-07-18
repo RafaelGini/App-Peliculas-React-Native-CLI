@@ -42,7 +42,7 @@ Este proyecto es una aplicación de películas desarrollada con React Native CLI
         npx react-native run-android
         ```
 
-## Características
+## Características - 2° Entrega
 
 Correspondiendo a la 2° entrega del trabajo practico, se incluyen las siguientes funcionalidades:
 
@@ -53,3 +53,17 @@ Correspondiendo a la 2° entrega del trabajo practico, se incluyen las siguiente
 - Perfil de usuario
 - Manejo de errores
 - Conexion entre Frontend y Backend
+
+
+## Características - 3° Entrega
+
+Correspondiendo a la 3° entrega (entrega final) del trabajo practico, se agregan las siguientes funcionalidades:
+
+- Home page con categorias
+- Persistencia de sesion del usuario
+- Favoritos
+- Detalles de peliculas 
+- Calificar pelicula
+- Compartir pelicula
+- Trailer de la pelicula
+- Corrección de errores
